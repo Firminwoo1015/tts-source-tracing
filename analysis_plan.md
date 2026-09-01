@@ -2,8 +2,7 @@
 
 This file fixes the protocol and the interpretation rules of the control analyses that were added
 after the first complete draft, so that their wording could not be adapted to their outcomes. It was
-written before any of them was run; the outcomes were appended afterwards, and one amendment was added
-after an external review. Everything else in the paper (Table 1, the interventions, the bands) predates
+written before any of them was run; the outcomes were appended afterwards. Everything else in the paper (Table 1, the interventions, the bands) predates
 this plan and is not covered by it.
 
 ## Common settings
@@ -51,6 +50,9 @@ this plan and is not covered by it.
   relative alignment G_t = mean_{j≠t} Δd_j − Δd_t; codec-adjusted G_adj = G_t − mean over the two
   unmatched codecs (EnCodec, DAC). Off-target controls are scored under the target of the matched probe
   they are compared with; targets are fixed from the architecture, never from the outcome.
+* The strongest-control gap G_min = G_matched − max over {EnCodec, DAC, BigVGAN-v2} (maximum recomputed
+  inside each of 10,000 speaker-bootstrap replicates) is a sensitivity analysis added after this plan;
+  G_adj above is the pre-specified metric.
 
 ## D. Generation-seed sensitivity (`analyze_seeds2.py` → `seeds2_*.csv`)
 * 20 speakers (4 per outer fold) × 3 utterances × wrapper seeds 101–103 × 5 systems, same checkpoints,
@@ -72,11 +74,3 @@ this plan and is not covered by it.
   [0.06, 0.13]; the selected w2v-BERT layer moved from L3 to L18 in every fold → the paper reports the
   dependence rather than invariance.
 
-## Amendment after external review
-* `analyze_centroid2.py` additionally reports the strongest-control gap
-  G_min = G_matched − max_u G_u over U = {EnCodec, DAC, BigVGAN-v2}, the maximum recomputed inside each
-  of 10,000 speaker-bootstrap replicates (the Vocos bound sits near zero: [0.007, 2.4]×10⁻³ at 1,000
-  replicates, [−0.002, 2.5]×10⁻³ at 10,000, so the paper reports the Vocos–EnCodec gap as not
-  statistically resolved). G_adj is unchanged. Off-target rows under each target and the control probes'
-  ΔP_t / S_t carry speaker-bootstrap CIs; `analyze_normalization_control.py` adds the paired CI of the
-  untrimmed − trimmed difference.

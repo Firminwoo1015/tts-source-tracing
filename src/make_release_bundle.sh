@@ -24,7 +24,7 @@ for ssl in wavlm w2vbert; do
 done
 RES=$(git ls-files results/paper5c17 2>/dev/null || ls results/paper5c17/*)
 echo "[bundle] root=$ROOT out=$OUT ($(date))"
-tar -cf "$OUT/manifests_and_results.tar" data/manifests/main.jsonl data/manifests/exclude17.txt data/manifests/speaker_folds.json data/manifests/seedsub20.jsonl $RES analysis_plan.md DATA_LICENSES.md LICENSE NOTICE PROVENANCE.md provenance.json provenance provenance_files.jsonl.gz provenance_files_summary.md README.md
+tar -cf "$OUT/manifests_and_results.tar" data/manifests/main.jsonl data/manifests/exclude17.txt data/manifests/speaker_folds.json data/manifests/seedsub20.jsonl $RES analysis_plan.md DATA_LICENSES.md LICENSE NOTICE PROVENANCE.md provenance.json $(git ls-files provenance) provenance_files.jsonl.gz provenance_files_summary.md README.md
 tar -cf "$OUT/embeddings.tar"      -T "$L/emb"
 tar -cf "$OUT/audio_generated.tar" -T "$L/gen"
 tar -cf "$OUT/audio_perturbed.tar" -T "$L/pert"

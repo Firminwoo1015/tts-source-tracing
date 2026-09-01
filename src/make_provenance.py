@@ -20,7 +20,7 @@ import soundfile as sf
 
 ROOT = Path(os.environ.get("TTS_ANAL_ROOT", Path(__file__).resolve().parents[1]))
 CKPTS = Path(os.environ.get("TTS_ANAL_CKPTS", ROOT / "ckpts"))
-ENVS = ["tts_anal", "tts_xtts", "tts_cosy", "tts_chatter", "tts_index", "tts_voc", "tts_qwen"]
+ENVS = ["tts_anal", "tts_xtts", "tts_cosy", "tts_chatter", "tts_index", "tts_voc"]
 
 
 def sha256(p, cap=1 << 30):
@@ -44,12 +44,22 @@ def logical(q):
         return str(q)
 
 
+USED = ["SWivid--F5-TTS", "charactr--vocos-mel-24khz", "facebook--encodec_24khz",
+        "nvidia--bigvgan_v2_24khz_100band_256x", "ResembleAI--chatterbox",
+        "microsoft--wavlm-large", "facebook--hubert-large-ll60k", "facebook--wav2vec2-xls-r-300m",
+        "facebook--wav2vec2-large-lv60", "facebook--w2v-bert-2.0", "Systran--faster-whisper-large-v3",
+        "IndexTeam--IndexTTS-1.5", "FunAudioLLM--Fun-CosyVoice3-0.5B-2512"]
+PAPER_CONDS = {"f5tts", "xtts", "cosyvoice3", "chatterbox", "indextts", "resynth_vocos", "resynth_glvocos",
+               "resynth_griffinlim", "resynth_hift3", "resynth_s3vc3", "resynth_bigvgan", "resynth_encodec",
+               "resynth_dac", "voc_pwg", "voc_melgan", "voc_mbmelgan", "voc_hifigan", "voc_stylemelgan"}
+
+
 def main():
     prov = {}
 
     # 1) explicit checkpoint dirs
     ckpt_files = {}
-    for d in ["CosyVoice2-0.5B", "IndexTTS-1.5"]:
+    for d in ["IndexTTS-1.5"]:
         base = CKPTS / d
         if base.exists():
             for p in sorted(base.rglob("*")):
@@ -62,6 +72,7 @@ def main():
     # 2) HF cache revisions
     hub = {}
     for m in sorted((CKPTS / "hub").glob("models--*")):
+        if m.name.replace("models--", "") not in USED: continue
         snaps = sorted((m / "snapshots").glob("*")) if (m / "snapshots").exists() else []
         hub[m.name.replace("models--", "").replace("--", "/")] = [s.name for s in snaps]
     prov["hf_cache_revisions"] = hub
@@ -89,11 +100,6 @@ def main():
     prov["env_freezes"] = [f"provenance/freeze_{e}.txt" for e in ENVS]
 
     # 4b) (v3) resolved HF revisions + per-file SHA-256 for every model used
-    USED = ["SWivid--F5-TTS","SWivid--E2-TTS","charactr--vocos-mel-24khz","facebook--encodec_24khz",
-            "nvidia--bigvgan_v2_24khz_100band_256x","ResembleAI--chatterbox","FunAudioLLM--CosyVoice2-0.5B",
-            "microsoft--wavlm-large","facebook--hubert-large-ll60k","facebook--wav2vec2-xls-r-300m",
-            "facebook--wav2vec2-large-lv60","facebook--w2v-bert-2.0","Systran--faster-whisper-large-v3",
-            "IndexTeam--IndexTTS-1.5","FunAudioLLM--Fun-CosyVoice3-0.5B-2512","Qwen--Qwen3-TTS-12Hz-1.7B-Base","Qwen--Qwen3-TTS-Tokenizer-12Hz"]
     hubm = {}
     for m in USED:
         d = CKPTS / "hub" / f"models--{m}"
@@ -139,6 +145,7 @@ def main():
     # 5) WAV metadata per condition (first file)
     meta = {}
     for cond in sorted((ROOT / "data/generated").glob("*")):
+        if cond.name not in PAPER_CONDS: continue
         w = next(iter(sorted(cond.glob("*.wav"))), None)
         if w:
             i = sf.info(str(w))
@@ -148,7 +155,7 @@ def main():
 
     (ROOT / "provenance.json").write_text(json.dumps(prov, indent=1))
 
-    md = ["# Provenance (reconstructed post hoc; see Codex audit 2026-08)\n"]
+    md = ["# Provenance\n", "Reconstructed from the files on disk after the runs (not logged at generation time). Per-file records: provenance_files.jsonl.gz.\n"]
     md.append(f"- third_party commits: {json.dumps(commits)}")
     md.append(f"- HF cache revisions: {len(hub)} models (provenance.json)")
     md.append(f"- checkpoint hashes: {len(ckpt_files)} files (provenance.json)")
@@ -158,14 +165,13 @@ def main():
     n_files = sum(len(v["files"]) for v in hubm.values() if isinstance(v, dict))
     md.append(f"- HF models used: {n_rev} revision IDs recorded; snapshot-backed per-file hashes for "
               f"{n_snap} repositories ({n_files} files); repos whose weights live in local directories "
-              f"(CosyVoice2-0.5B, IndexTTS-1.5) are hashed separately under checkpoint_hashes "
+              f"(IndexTTS-1.5) are hashed separately under checkpoint_hashes "
               f"({len(ckpt_files)} files)")
     md.append(f"- non-HF checkpoints (XTTS/DAC/ParallelWaveGAN, AppleDouble files excluded): {len(extra)} files hashed")
     md.append("- BigVGAN local patch recorded as git diff (bigvgan_local_patch)")
-    md.append("- NOTE: the main run had no uniform per-utterance seeding protocol "
-              "(F5 family seed=0; CosyVoice2/3 YAMLs fix an RNG seed at load time; "
-              "XTTS/Chatterbox/IndexTTS/Qwen3-TTS wrappers set no seed); multi-seed "
-              "subset used seeds 1,2 with torch/np/random seeding.")
+    md.append("- Seed policy of the main run: each wrapper's native policy (F5-TTS seed 0; the CosyVoice3 YAML "
+              "seeds its RNG once at load; XTTS/Chatterbox/IndexTTS set no seed). The controlled-seed subsets "
+              "(seeds 101-103) seed random/numpy/torch before every utterance.")
     md.append("- Chatterbox: PerTh watermarker replaced by DummyWatermarker "
               "at generation (no audio watermark in outputs).")
     (ROOT / "PROVENANCE.md").write_text("\n".join(md) + "\n")

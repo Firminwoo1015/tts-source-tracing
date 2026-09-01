@@ -13,12 +13,10 @@
 !/LICENSE
 !/NOTICE
 !/provenance
-!/provenance/env_tex.yml
 !/provenance/env_tts_anal.yml
 !/provenance/env_tts_chatter.yml
 !/provenance/env_tts_cosy.yml
 !/provenance/env_tts_index.yml
-!/provenance/env_tts_qwen.yml
 !/provenance/env_tts_voc.yml
 !/provenance/env_tts_xtts.yml
 !/provenance_files.jsonl.gz
@@ -27,7 +25,6 @@
 !/provenance/freeze_tts_chatter.txt
 !/provenance/freeze_tts_cosy.txt
 !/provenance/freeze_tts_index.txt
-!/provenance/freeze_tts_qwen.txt
 !/provenance/freeze_tts_voc.txt
 !/provenance/freeze_tts_xtts.txt
 !/provenance.json
