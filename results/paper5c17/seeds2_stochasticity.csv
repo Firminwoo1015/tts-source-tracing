@@ -1,0 +1,6 @@
+system,pairs,identical_pairs,mean_abs_sample_diff,length_varies
+f5tts,180,0,0.06516350275857737,True
+xtts,180,0,0.13968623314923584,True
+cosyvoice3,180,0,0.06622453739011828,True
+chatterbox,180,0,0.05964577375111845,True
+indextts,180,0,0.05110152806734959,True
