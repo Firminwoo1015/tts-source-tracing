@@ -77,7 +77,7 @@ The manifests store LibriSpeech paths of the original machine; `src/relocate_man
 
 ## 4. Data bundle (audio + embeddings)
 
-`<DATA_REPOSITORY_URL>` (Hugging Face Dataset, gated for research use). The bundle covers exactly the paper's scope: the five systems, the interventions, the decoder-only vocoders, the seven perturbations (three realizations for the stochastic ones), the controlled-seed subsets, and the embeddings of those conditions. Archives and SHA-256 sums:
+https://huggingface.co/datasets/firminumanu/tts-source-tracing-data (Hugging Face Dataset, gated for research use: accept the research-use terms, then `hf download firminumanu/tts-source-tracing-data --repo-type dataset --local-dir .`). The bundle covers exactly the paper's scope: the five systems, the interventions, the decoder-only vocoders, the seven perturbations (three realizations for the stochastic ones), the controlled-seed subsets, and the embeddings of those conditions. Archives and SHA-256 sums:
 
 ```
 ab720c3e736880f707e5442492e5759d9499d53de914fe46285a0291590a27cd  audio_generated.tar  (2.28 GB)
