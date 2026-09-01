@@ -1,65 +1,5 @@
 {
  "checkpoint_hashes": {
-  "CosyVoice2-0.5B/CosyVoice-BlankEN/config.json": {
-   "bytes": 659,
-   "sha256": "168aa1bd401abc3bc262ba15ba4e499627a8b4e006e9d050b47c22de20660185"
-  },
-  "CosyVoice2-0.5B/CosyVoice-BlankEN/generation_config.json": {
-   "bytes": 242,
-   "sha256": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6"
-  },
-  "CosyVoice2-0.5B/CosyVoice-BlankEN/model.safetensors": {
-   "bytes": 988097824,
-   "sha256": "130282af0dfa9fe5840737cc49a0d339d06075f83c5a315c3372c9a0740d0b96"
-  },
-  "CosyVoice2-0.5B/CosyVoice-BlankEN/tokenizer_config.json": {
-   "bytes": 1287,
-   "sha256": "482bd979881423375ca5414e4e0d94cd7c5349dbb17fffd46b4d36d71e62a1bc"
-  },
-  "CosyVoice2-0.5B/CosyVoice-BlankEN/vocab.json": {
-   "bytes": 2776833,
-   "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
-  },
-  "CosyVoice2-0.5B/campplus.onnx": {
-   "bytes": 28303423,
-   "sha256": "a6ac6a63997761ae2997373e2ee1c47040854b4b759ea41ec48e4e42df0f4d73"
-  },
-  "CosyVoice2-0.5B/config.json": {
-   "bytes": 2,
-   "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
-  },
-  "CosyVoice2-0.5B/configuration.json": {
-   "bytes": 47,
-   "sha256": "c502b6328c67638b401df8dd05de89e9e8d1cff9cd0ada10dfbdbe13556c20de"
-  },
-  "CosyVoice2-0.5B/cosyvoice2.yaml": {
-   "bytes": 7330,
-   "sha256": "0af2c0d010c477187c39f3e8fd5f1ae2e4e6f90ad03ba37c10ed6c6a87b05959"
-  },
-  "CosyVoice2-0.5B/flow.decoder.estimator.fp32.onnx": {
-   "bytes": 286317026,
-   "sha256": "cd54e4281701e6630730da64502d77b7e8b6e5c057cca65128bffb50f85cbf98"
-  },
-  "CosyVoice2-0.5B/flow.pt": {
-   "bytes": 450575567,
-   "sha256": "ff4c2f867674411e0a08cee702996df13fa67c1cd864c06108da88d16d088541"
-  },
-  "CosyVoice2-0.5B/hift.pt": {
-   "bytes": 83390254,
-   "sha256": "3386cc880324d4e98e05987b99107f49e40ed925b8ecc87c1f4939432d429879"
-  },
-  "CosyVoice2-0.5B/llm.pt": {
-   "bytes": 2023316821,
-   "sha256": "b144ef55b51ce8cfb79a73c90dbba0bdaba4e451c0ebcfab20f769264f84a608"
-  },
-  "CosyVoice2-0.5B/speech_tokenizer_v2.batch.onnx": {
-   "bytes": 496095794,
-   "sha256": "5b45a98572ed21e3a3ebf50201f3020567f7db40e9a57509b790b2982f5c07b7"
-  },
-  "CosyVoice2-0.5B/speech_tokenizer_v2.onnx": {
-   "bytes": 496082973,
-   "sha256": "d43342aa12163a80bf07bffb94c9de2e120a8df2f9917cd2f642e7f4219c6f71"
-  },
   "IndexTTS-1.5/.cache/huggingface/trees/25851a6036dfd3095bb70fb3c8f49217104672c3.json": {
    "bytes": 2029,
    "sha256": "a9a7e6ccabcb3304cd531a07c8d677f436183cd231bd1ed1fbcceb024cc69506"
@@ -86,44 +26,12 @@
   }
  },
  "hf_cache_revisions": {
-  "BAAI/bge-m3": [
-   "5617a9f61b028005a4858fdac845db406aefb181",
-   "9a0624b896d81da7492a910ffa53731274b6cf3d"
-  ],
-  "FunAudioLLM/CosyVoice2-0.5B": [],
   "FunAudioLLM/Fun-CosyVoice3-0.5B-2512": [
    "29e01c4e8d000f4bcd70751be16fa94bf3d85a18"
   ],
   "IndexTeam/IndexTTS-1.5": [],
-  "IndexTeam/IndexTTS-2": [
-   "740dcaff396282ffb241903d150ac011cd4b1ede"
-  ],
-  "IndexTeam/IndexTTS-2.5": [
-   "c39ce5ba981572cb187443877ff559dfb246ce63"
-  ],
-  "Qwen/Qwen2-VL-7B-Instruct": [
-   "eed13092ef92e448dd6875b2a00151bd3f7db0ac"
-  ],
-  "Qwen/Qwen3-TTS-12Hz-1.7B-Base": [
-   "fd4b254389122332181a7c3db7f27e918eec64e3"
-  ],
-  "Qwen/Qwen3-TTS-Tokenizer-12Hz": [
-   "7dd38ad4e9bad454aae9cd937d0cd577604fe229"
-  ],
-  "Qwen/Qwen3-VL-30B-A3B-Instruct": [
-   "9c4b90e1e4ba969fd3b5378b57d966d725f1b86c"
-  ],
-  "Qwen/Qwen3-VL-32B-Instruct": [
-   "0cfaf48183f594c314753d30a4c4974bc75f3ccb"
-  ],
-  "Qwen/Qwen3-VL-8B-Instruct": [
-   "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b"
-  ],
   "ResembleAI/chatterbox": [
    "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18"
-  ],
-  "SWivid/E2-TTS": [
-   "851141880b5ca38050025e98dfdee27dc553f86e"
   ],
   "SWivid/F5-TTS": [
    "84e5a410d9cead4de2f847e7c9369a6440bdfaca"
@@ -131,14 +39,8 @@
   "Systran/faster-whisper-large-v3": [
    "edaa852ec7e145841d8ffdb056a99866b5f0a478"
   ],
-  "bert-base-uncased": [
-   "86b5e0934494bd15c9632b12f734a8a67f723594"
-  ],
   "charactr/vocos-mel-24khz": [
    "0feb3fdd929bcd6649e0e7c5a688cf7dd012ef21"
-  ],
-  "facebook/dinov2-base": [
-   "f9e44c814b77203eaa57a6bdbbd535f21ede1415"
   ],
   "facebook/encodec_24khz": [
    "c1dbe2ae3f1de713481a3b3e7c47f357092ee040"
@@ -147,15 +49,8 @@
    "1c513b9a0780f7afa32e4480311fa444e56c3a2e",
    "ff022d095678a2995f3c49bab18a96a9e553f782"
   ],
-  "facebook/vit-mae-base": [
-   "25b184bea5538bf5c4c852c79d221195fdd2778d"
-  ],
   "facebook/w2v-bert-2.0": [
    "da985ba0987f70aaeb84a80f2851cfac8c697a7b"
-  ],
-  "facebook/wav2vec2-base": [
-   "0b5b8e868dd84f03fd87d01f9c4ff0f080fecfe8",
-   "f30924bbbfbf6058e04aab549531ea55c74928d0"
   ],
   "facebook/wav2vec2-large-lv60": [
    "0c09c5d8b5d0648931475132e69223194502a69b",
@@ -165,67 +60,12 @@
    "13c621bf60edceade45b15915ef17bfbe73e4979",
    "1a640f32ac3e39899438a2931f9924c02f080a54"
   ],
-  "ghost613/faster-whisper-large-v3-turbo-korean": [],
-  "gpt2": [
-   "607a30d783dfa663caf39e06633721c8d4cfcd7e"
-  ],
-  "hexgrad/Kokoro-82M": [
-   "f3ff3571791e39611d31c381e3a41a3af07b4987"
-  ],
-  "intfloat/e5-base-v2": [
-   "f52bf8ec8c7124536f0efb74aca902b2995e5bcd"
-  ],
-  "llava-hf/llava-v1.6-mistral-7b-hf": [
-   "2424fdd47412fccc66d91719126b420e9fbd7065"
-  ],
   "microsoft/wavlm-large": [
    "07d9d3d8576fd3d718ee7b16b2b6242e9610d9af",
    "c1423ed94bb01d80a3f5ce5bc39f6026a0f4828c"
   ],
-  "nvidia/bigvgan_22khz_80band": [],
-  "nvidia/bigvgan_base_22khz_80band": [],
-  "nvidia/bigvgan_v2_22khz_80band_fmax8k_256x": [
-   "a9d8b711c344f3c49cc1a05d0c8b6741cf733aa8"
-  ],
   "nvidia/bigvgan_v2_24khz_100band_256x": [
    "c329ede9e9bbc100ddf5c91e2330a61921262370"
-  ],
-  "nvidia/diar_sortformer_4spk-v1": [
-   "9f17b10df44c0a4c8f3c86fbddc9ee2d6ab9ac08"
-  ],
-  "nvidia/diar_streaming_sortformer_4spk-v2": [
-   "6dbf0d69730bfee097056692b86525a0a23b32f9"
-  ],
-  "nvidia/speakerverification_en_titanet_large": [
-   "0dc382f40121a5fbd34db10a2bb04d826c2be6a8"
-  ],
-  "openai/clip-vit-base-patch16": [
-   "57c216476eefef5ab752ec549e440a49ae4ae5f3",
-   "5ef227a78de3f75873f373246dac80def63b0003"
-  ],
-  "openai/whisper-large-v3": [
-   "06f233fe06e710322aca913c1bc4249a0d71fce1"
-  ],
-  "openai-community/roberta-base-openai-detector": [
-   "6cba99c003b711c7fe94f8a3aa2be35a792cb6fa"
-  ],
-  "roberta-base": [
-   "e2da8e2f811d1448a5b465c236feacd80ffbac7b"
-  ],
-  "speechbrain/spkrec-ecapa-voxceleb": [
-   "0f99f2d0ebe89ac095bcc5903c4dd8f72b367286"
-  ],
-  "stabilityai/sd-turbo": [
-   "b261bac6fd2cf515557d5d0707481eafa0485ec2"
-  ],
-  "stabilityai/sdxl-turbo": [
-   "71153311d3dbb46851df1931d3ca6e939de83304"
-  ],
-  "stable-diffusion-v1-5/stable-diffusion-v1-5": [
-   "451f4fe16113bff5a5d2269ed5ad43b0592e9a14"
-  ],
-  "timm/tf_efficientnetv2_s.in21k_ft_in1k": [
-   "ea9abc143ea2b9d8e1ec1de277bce02149b9cf0e"
   ]
  },
  "third_party_commits": {
@@ -239,8 +79,7 @@
   "provenance/freeze_tts_cosy.txt",
   "provenance/freeze_tts_chatter.txt",
   "provenance/freeze_tts_index.txt",
-  "provenance/freeze_tts_voc.txt",
-  "provenance/freeze_tts_qwen.txt"
+  "provenance/freeze_tts_voc.txt"
  ],
  "hf_models_used": {
   "SWivid--F5-TTS": {
@@ -261,19 +100,6 @@
     "F5TTS_v1_Base/model_1250000.safetensors": {
      "bytes": 1348435761,
      "sha256": "670900fd14e6c458b95da6e9ed317cdb20dbaf7a1c02ac06a05475a9d32b6a38"
-    }
-   }
-  },
-  "SWivid--E2-TTS": {
-   "resolved_revision": "851141880b5ca38050025e98dfdee27dc553f86e",
-   "snapshot_used": "851141880b5ca38050025e98dfdee27dc553f86e",
-   "all_snapshots": [
-    "851141880b5ca38050025e98dfdee27dc553f86e"
-   ],
-   "files": {
-    "E2TTS_Base/model_1200000.safetensors": {
-     "bytes": 1334133985,
-     "sha256": "8a813cd26fd21b298734eece9474bfea842a585adff98d2bb89fd384b1c00ac7"
     }
    }
   },
@@ -408,12 +234,6 @@
      "sha256": "f0921cab452fa278bc25cd23ffd59d36f816d7dc5181dd1bef9751a7fb61f63c"
     }
    }
-  },
-  "FunAudioLLM--CosyVoice2-0.5B": {
-   "resolved_revision": "eec1ae6c79877dbd9379285cf8789c9e0879293d",
-   "snapshot_used": null,
-   "all_snapshots": [],
-   "files": {}
   },
   "microsoft--wavlm-large": {
    "resolved_revision": "c1423ed94bb01d80a3f5ce5bc39f6026a0f4828c",
@@ -667,100 +487,6 @@
      "sha256": "23236a74175dbdda47afc66dbadd5bcb41303c467a57c261cb8539ad9db9208d"
     }
    }
-  },
-  "Qwen--Qwen3-TTS-12Hz-1.7B-Base": {
-   "resolved_revision": "fd4b254389122332181a7c3db7f27e918eec64e3",
-   "snapshot_used": "fd4b254389122332181a7c3db7f27e918eec64e3",
-   "all_snapshots": [
-    "fd4b254389122332181a7c3db7f27e918eec64e3"
-   ],
-   "files": {
-    ".gitattributes": {
-     "bytes": 1519,
-     "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
-    },
-    "README.md": {
-     "bytes": 57817,
-     "sha256": "621b7e88f1867bc03d817176fc1f7f55f4b5a70654b2a07fdcda1e169efb024b"
-    },
-    "config.json": {
-     "bytes": 4494,
-     "sha256": "b4f01752d15a488abde3e1ab44723ae4f4b9e68a4037257b098b3737893cc1f9"
-    },
-    "generation_config.json": {
-     "bytes": 245,
-     "sha256": "f1b90b4513f3b34c62851049e2492d7b4c5940daf1276f89c82b8ef04127f3aa"
-    },
-    "merges.txt": {
-     "bytes": 1671839,
-     "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3"
-    },
-    "model.safetensors": {
-     "bytes": 3857413744,
-     "sha256": "38fc7fc51c5e776e840414b6fd443962e9411b9654888fd7913e4da643cb857c"
-    },
-    "preprocessor_config.json": {
-     "bytes": 127,
-     "sha256": "efdde1022ea9d76928bf7a9cd53139138f5ba2e466e837f08f6105ab1af1c119"
-    },
-    "speech_tokenizer/config.json": {
-     "bytes": 2336,
-     "sha256": "ee65bb901c876664ab8707c487157aa1a6ee57c65969b28fb5ec9dc211e68167"
-    },
-    "speech_tokenizer/configuration.json": {
-     "bytes": 76,
-     "sha256": "6bc26d64eb5024b4d1dab5a52371958b429256d6c9d59787f1f5294a54e0cebd"
-    },
-    "speech_tokenizer/model.safetensors": {
-     "bytes": 682293092,
-     "sha256": "836b7b357f5ea43e889936a3709af68dfe3751881acefe4ecf0dbd30ba571258"
-    },
-    "speech_tokenizer/preprocessor_config.json": {
-     "bytes": 234,
-     "sha256": "fcb3805e597e786d4067706e602f6688524640f8d3396790e2e09b5942fcbdfb"
-    },
-    "tokenizer_config.json": {
-     "bytes": 7344,
-     "sha256": "dc3c31c3bdaedd5016382bb3cbe07323026775ad51f5a4fb564505992ae4a670"
-    },
-    "vocab.json": {
-     "bytes": 2776833,
-     "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
-    }
-   }
-  },
-  "Qwen--Qwen3-TTS-Tokenizer-12Hz": {
-   "resolved_revision": "7dd38ad4e9bad454aae9cd937d0cd577604fe229",
-   "snapshot_used": "7dd38ad4e9bad454aae9cd937d0cd577604fe229",
-   "all_snapshots": [
-    "7dd38ad4e9bad454aae9cd937d0cd577604fe229"
-   ],
-   "files": {
-    ".gitattributes": {
-     "bytes": 1519,
-     "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
-    },
-    "README.md": {
-     "bytes": 3482,
-     "sha256": "1d9016fbb07873cd720d008423c3da275eac7a20c3997a525594025608d3e1cf"
-    },
-    "config.json": {
-     "bytes": 2336,
-     "sha256": "ee65bb901c876664ab8707c487157aa1a6ee57c65969b28fb5ec9dc211e68167"
-    },
-    "configuration.json": {
-     "bytes": 76,
-     "sha256": "6bc26d64eb5024b4d1dab5a52371958b429256d6c9d59787f1f5294a54e0cebd"
-    },
-    "model.safetensors": {
-     "bytes": 682293092,
-     "sha256": "836b7b357f5ea43e889936a3709af68dfe3751881acefe4ecf0dbd30ba571258"
-    },
-    "preprocessor_config.json": {
-     "bytes": 234,
-     "sha256": "fcb3805e597e786d4067706e602f6688524640f8d3396790e2e09b5942fcbdfb"
-    }
-   }
   }
  },
  "other_checkpoints": {
@@ -974,19 +700,9 @@
    "subtype": "FLOAT",
    "channels": 1
   },
-  "cosyvoice2": {
-   "sr": 24000,
-   "subtype": "FLOAT",
-   "channels": 1
-  },
   "cosyvoice3": {
    "sr": 24000,
    "subtype": "FLOAT",
-   "channels": 1
-  },
-  "e2tts": {
-   "sr": 24000,
-   "subtype": "PCM_16",
    "channels": 1
   },
   "f5tts": {
@@ -994,27 +710,7 @@
    "subtype": "PCM_16",
    "channels": 1
   },
-  "f5tts_base": {
-   "sr": 24000,
-   "subtype": "PCM_16",
-   "channels": 1
-  },
-  "f5tts_bigvgan": {
-   "sr": 24000,
-   "subtype": "PCM_16",
-   "channels": 1
-  },
   "indextts": {
-   "sr": 24000,
-   "subtype": "PCM_16",
-   "channels": 1
-  },
-  "kokoro": {
-   "sr": 24000,
-   "subtype": "PCM_16",
-   "channels": 1
-  },
-  "qwen3tts": {
    "sr": 24000,
    "subtype": "PCM_16",
    "channels": 1
@@ -1044,22 +740,7 @@
    "subtype": "PCM_16",
    "channels": 1
   },
-  "resynth_hift": {
-   "sr": 24000,
-   "subtype": "FLOAT",
-   "channels": 1
-  },
   "resynth_hift3": {
-   "sr": 24000,
-   "subtype": "FLOAT",
-   "channels": 1
-  },
-  "resynth_qwencodec": {
-   "sr": 24000,
-   "subtype": "PCM_16",
-   "channels": 1
-  },
-  "resynth_s3vc": {
    "sr": 24000,
    "subtype": "FLOAT",
    "channels": 1
