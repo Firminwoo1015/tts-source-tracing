@@ -1,0 +1,10 @@
+This repository accompanies the ICASSP 2027 submission
+"Where Modern Zero-Shot TTS Leaves Its Trace: Localizing Source-Tracing Cues in
+Self-Supervised Speech Representations".
+
+Code: MIT License (see LICENSE).
+Data: see DATA_LICENSES.md. Derivatives of LibriSpeech and VCTK are redistributed under
+CC BY 4.0 with attribution; generated speech, perturbations and embeddings are released under the
+source- and model-specific terms documented there, for research on source tracing.
+Third-party model weights and code keep their own licenses: see the per-model table in
+DATA_LICENSES.md (also recorded under `licenses` in provenance.json) and third_party/README.md.
