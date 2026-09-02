@@ -6,7 +6,10 @@ A paired, speaker- and text-disjoint source-tracing benchmark of five open zero-
 (F5-TTS v1, XTTS-v2, Fun-CosyVoice3, Chatterbox, IndexTTS-1.5; all native 24 kHz) on LibriSpeech
 `test-clean` (39 speakers × 10 targets, 17-ID duration-QC mask → 373 paired IDs, 2,238 waveforms),
 probed layer-wise with five frozen SSL encoders (WavLM-Large, HuBERT-Large, XLS-R 300M,
-wav2vec2-LV60, w2v-BERT 2.0). This repository holds everything the paper says is released:
+wav2vec2-LV60, w2v-BERT 2.0). Systems were chosen as open checkpoints that clone unseen voices,
+jointly span the current decoder lineages, and share a native 24 kHz rate; IndexTTS-2/2.5 were
+evaluated for inclusion but left out because their synthesis path runs at 22.05 kHz, which would
+break the uniform-rate control. This repository holds everything the paper says is released:
 the manifests, the generation and analysis code, checkpoint/wrapper/output provenance, and every
 number behind the tables and figures. Audio and embeddings are in the data bundle (Section 4).
 
