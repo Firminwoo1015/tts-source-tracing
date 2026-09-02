@@ -211,7 +211,7 @@ def fig_interv_layers():
     if "qwen3tts" in SYSTEMS:
         matched += [("resynth_qwencodec", "Qwen codec→Qwen3", "-.")]
     leg_rows = (len(matched) + 3) // 4
-    leg_h = 0.16 * leg_rows + 0.06; fig_h = 1.55 + leg_h
+    leg_h = 0.16 * leg_rows + 0.06; fig_h = 2.10 + leg_h
     MK = {"resynth_vocos": "o", "resynth_glvocos": "x", "resynth_hift3": "^", "resynth_s3vc3": "s",
           "resynth_hift": "v", "resynth_s3vc": "D", "resynth_qwencodec": "P"}
     fig, axes = plt.subplots(1, 2, figsize=(COL, fig_h), sharey=True)
