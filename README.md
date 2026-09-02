@@ -2,7 +2,7 @@
 
 Minwoo Lee, Jaegul Choo (KAIST AI). Manuscript under review (submitted to ICASSP 2027); please cite the preprint once available.
 
-A paired, speaker- and text-disjoint source-tracing benchmark of five open zero-shot TTS systems
+A controlled paired source-tracing corpus and evaluation protocol, speaker- and text-disjoint, for five open zero-shot TTS systems
 (F5-TTS v1, XTTS-v2, Fun-CosyVoice3, Chatterbox, IndexTTS-1.5; all native 24 kHz) on LibriSpeech
 `test-clean` (39 speakers × 10 targets, 17-ID duration-QC mask → 373 paired IDs, 2,238 waveforms),
 probed layer-wise with five frozen SSL encoders (WavLM-Large, HuBERT-Large, XLS-R 300M,

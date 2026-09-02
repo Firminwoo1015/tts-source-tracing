@@ -6,7 +6,7 @@ written before any of them was run; the outcomes were appended afterwards. Every
 this plan and is not covered by it.
 
 ## Common settings
-* Data: the paired LibriSpeech benchmark, five systems (F5-TTS v1, XTTS-v2, Fun-CosyVoice3, Chatterbox,
+* Data: the paired LibriSpeech corpus, five systems (F5-TTS v1, XTTS-v2, Fun-CosyVoice3, Chatterbox,
   IndexTTS-1.5) plus `real`, QC mask `data/manifests/exclude17.txt` (373 IDs, 2,238 waveforms).
 * Splits: outer speaker-disjoint GroupKFold(5) as in `analyze_cloning.py`; inner GroupKFold(4) on the
   training speakers for any layer or hyper-parameter selection.
