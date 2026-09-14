@@ -1,6 +1,6 @@
 # Where Modern Zero-Shot TTS Leaves Its Trace: Localizing Source-Tracing Cues in Self-Supervised Speech Representations
 
-Minwoo Lee, Jaegul Choo (KAIST AI). Manuscript under review (submitted to ICASSP 2027); please cite the preprint once available.
+Minwoo Lee, Kyudan Jung, Jaegul Choo (KAIST AI). Manuscript under review (submitted to ICASSP 2027); please cite the preprint once available.
 
 A controlled paired source-tracing corpus and evaluation protocol, speaker- and text-disjoint, for five open zero-shot TTS systems
 (F5-TTS v1, XTTS-v2, Fun-CosyVoice3, Chatterbox, IndexTTS-1.5; all native 24 kHz) on LibriSpeech
@@ -99,5 +99,5 @@ non-commercial research use only. See `DATA_LICENSES.md`.
 ```
 @unpublished{lee2026trace,
   title={Where Modern Zero-Shot {TTS} Leaves Its Trace: Localizing Source-Tracing Cues in Self-Supervised Speech Representations},
-  author={Lee, Minwoo and Choo, Jaegul}, year={2026}, note={Under review}}
+  author={Lee, Minwoo and Jung, Kyudan and Choo, Jaegul}, year={2026}, note={Under review}}
 ```
