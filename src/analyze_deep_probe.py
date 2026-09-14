@@ -15,7 +15,7 @@ import numpy as np, pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 from sklearn.model_selection import GroupKFold
-from sklearn.neighbors import KNeighborsClassifier, NearestCentroid
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import normalize
 sys.path.insert(0, str(Path(__file__).parent))
 from analyze_bands import load_all, SSLS, BANDS
@@ -26,12 +26,26 @@ RNG = np.random.default_rng(0)
 CGRID = [0.1, 1.0, 10.0]
 
 
+class CosineCentroid:
+    """Nearest centroid under cosine similarity: class means of the L2-normalized training
+    embeddings are re-normalized, and a query is assigned to the centroid with the largest
+    dot product (sklearn's NearestCentroid uses Euclidean distance to un-normalized means)."""
+
+    def fit(self, X, y):
+        self.classes_ = np.unique(y)
+        self.C_ = normalize(np.stack([X[y == c].mean(0) for c in self.classes_]))
+        return self
+
+    def predict(self, X):
+        return self.classes_[np.argmax(normalize(X) @ self.C_.T, axis=1)]
+
+
 def make(clf, C=1.0):
     if clf == "knn":
         return KNeighborsClassifier(5, metric="cosine")
     if clf == "logreg":
         return LogisticRegression(C=C, max_iter=2000)
-    return NearestCentroid()
+    return CosineCentroid()
 
 
 def nested(embs, y, g, band, clf):
@@ -64,15 +78,18 @@ def boot_f1(y, pred, g, n=1000):
 
 def main():
     out = ROOT / RESULTS / "deep_probe.csv"
+    clfs = os.environ.get("TTS_ANAL_CLFS", "knn,logreg,centroid").split(",")
     if out.exists() and not os.environ.get("TTS_ANAL_FORCE"):
         n = len(pd.read_csv(out))
         if n >= len(SSLS) * len(BANDS) * 3:
             print(f"skip: {out} complete ({n} rows); set TTS_ANAL_FORCE=1 to recompute"); return
-    rows = []
+    # TTS_ANAL_FORCE with a subset of classifiers replaces only those rows in an existing CSV
+    old = pd.read_csv(out) if out.exists() else None
+    rows = [] if old is None else old[~old.classifier.isin(clfs)].to_dict("records")
     for ssl in SSLS:
         embs, y, g = load_all(ssl)
         for bname, band in BANDS.items():
-            for clf in ["knn", "logreg", "centroid"]:
+            for clf in clfs:
                 pred, chosen = nested(embs, y, g, list(band), clf)
                 f1 = f1_score(y, pred, average="macro"); lo, hi = boot_f1(y, pred, g)
                 rows.append({"ssl": ssl, "band": bname, "classifier": clf, "macro_f1": f1,

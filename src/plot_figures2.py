@@ -78,7 +78,7 @@ def fig_intervention():
     clab = [CL2.get(c, c) for c in conds]
     M = np.array([[d0.loc[p, f"dP_{c}"] for c in conds] for p, _, _ in probes])
     n = len(probes)
-    fig = plt.figure(figsize=(FULL, 2.05 + 0.05 * max(0, n - 8)), layout="constrained")
+    fig = plt.figure(figsize=(FULL, 2.15 + 0.05 * max(0, n - 8)), layout="constrained")
     gs = fig.add_gridspec(1, 3, width_ratios=[3.3, 1.3, 3.0])
     ax = fig.add_subplot(gs[0]); ax2 = fig.add_subplot(gs[1], sharey=ax); ax3 = fig.add_subplot(gs[2])
     # ---- (a) heatmap
@@ -89,7 +89,7 @@ def fig_intervention():
             ax.add_patch(plt.Rectangle((j - 0.5, i - 0.5), 1, 1, fill=False, edgecolor="k", lw=1.6))
         for j in range(len(conds)):
             if abs(M[i, j]) >= 0.10:
-                ax.text(j, i, f"{M[i, j]:.2f}".replace("-", "$-$"), ha="center", va="center", fontsize=7.5,
+                ax.text(j, i, f"{M[i, j]:.2f}".replace("-", "$-$"), ha="center", va="center", fontsize=9,
                         color="white" if abs(M[i, j]) > 0.45 else "black")
     ax.set_xticks(range(len(conds)), clab, fontsize=9, rotation=30, ha="right")
     ax.set_yticks(range(n), [l for _, l, _ in probes], fontsize=9)
@@ -109,20 +109,23 @@ def fig_intervention():
             vals = [(t2, r.get(f"S_{t2}", np.nan)) for t2 in ["f5tts", "cosyvoice3"] if t2 in SYSTEMS]
             for k, (t2, v) in enumerate(vals):
                 if not pd.isna(v):
+                    lo, hi = r.get(f"S_{t2}_lo", np.nan), r.get(f"S_{t2}_hi", np.nan)
+                    xerr = None if pd.isna(lo) or pd.isna(hi) else [[v - lo], [hi - v]]
                     ax2.barh(i - 0.19 + 0.38 * k, v, height=0.34, color=["#7a7a7a", "#bdbdbd"][k], zorder=3,
+                             xerr=xerr, capsize=1.5, error_kw={"lw": 0.6, "ecolor": "#555555"},
                              label=f"control under {CL2.get(t2, t2)}" if i == n - 1 else None)
     ax2.axvline(0, color="k", lw=0.7)
     ax2.tick_params(axis="y", labelleft=False, left=False)
     ax2.tick_params(axis="x", labelsize=9)
     ax2.set_xlabel(r"$S_t$", fontsize=9, labelpad=1)
     ax2.set_title(r"(b) margin $S_t$", fontsize=9.5)
-    # ---- (c) geometry scatter with leader-line labels
+    # ---- (c) geometry scatter: markers/colors follow Fig. 2 (matched probes), hollow squares = controls
     def lab_of(l): return l.split("→")[0].replace("GL (Vocos mel)", "GL-Vocos").replace("GL (generic)", "GL-generic")
-    pts = []  # (x, y, label, kind)
+    pts = []  # (x, y, label, probe-or-"ctrl")
     for p, l, t in probes:
         if t and p in c2.index and "T" in c2.columns and not pd.isna(c2.loc[p, "T"]):
-            pts.append((1e3 * c2.loc[p, "T"], 1e3 * c2.loc[p, "G"], lab_of(l), "gl" if "GL" in l else "matched"))
-    CTRL_LAB = {"resynth_encodec": "Enc", "resynth_dac": "DAC", "resynth_bigvgan": "BigV"}
+            pts.append((1e3 * c2.loc[p, "T"], 1e3 * c2.loc[p, "G"], lab_of(l), p))
+    CTRL_LAB = {"resynth_encodec": "EnCodec", "resynth_dac": "DAC", "resynth_bigvgan": "BigVGAN"}
     for p in ["resynth_encodec", "resynth_dac", "resynth_bigvgan"]:
         for t2 in [x for x in ["f5tts", "cosyvoice3"] if x in SYSTEMS]:
             if p == "resynth_bigvgan" and t2 != "cosyvoice3":
@@ -131,22 +134,40 @@ def fig_intervention():
             if key in c2.index:
                 pts.append((1e3 * c2.loc[key, "T"], 1e3 * c2.loc[key, "G"],
                             CTRL_LAB[p] + "/" + ("F5" if t2 == "f5tts" else "C3"), "ctrl"))
-    style = {"matched": dict(marker="o", s=46, color="#4878b0", zorder=4),
-             "gl": dict(marker="D", s=34, color="#4878b0", zorder=4),
-             "ctrl": dict(marker="s", s=40, color="#8c8c8c", zorder=3)}
+    STY = {"resynth_vocos": dict(marker="o", color="#1f77b4", s=44),
+           "resynth_glvocos": dict(marker="D", color="#ff7f0e", s=30),
+           "resynth_griffinlim": dict(marker="D", color="#ff7f0e", s=30),
+           "resynth_hift3": dict(marker="^", color="#2ca02c", s=50),
+           "resynth_s3vc3": dict(marker="s", color="#d62728", s=40),
+           "resynth_hift": dict(marker="^", color="#2ca02c", s=50),
+           "resynth_s3vc": dict(marker="s", color="#d62728", s=40),
+           "resynth_bigvgan": dict(marker="v", color="#9467bd", s=50),
+           "ctrl": dict(marker="s", facecolors="none", edgecolors="#6d6d6d", s=42, linewidths=1.0)}
     # label anchor positions in data units (x1e3); None -> default offset
-    POS = {"Vocos": (12.8, 9.3), "GL-generic": (3.2, 14.7), "GL-Vocos": (3.2, 12.0),
-           "HiFT": (5.2, 6.6), "Token RT": (11.2, 5.9), "BigVGAN": (9.6, -2.2),
-           "Enc/F5": (5.0, 9.9), "DAC/F5": (12.8, 3.5), "BigV/C3": (12.8, 1.4),
-           "DAC/C3": (3.6, 4.6), "Enc/C3": (0.8, -1.8)}
+    # (tx, ty, ha): label anchor in data units and horizontal alignment
+    # matched probes are identified by the figure legend (9 pt); only controls carry text labels
+    POS = {"EnCodec/F5": (8.6, 10.3, "right"), "DAC/F5": (12.3, 4.5, "left"), "BigVGAN/C3": (11.8, 1.3, "left"),
+           "DAC/C3": (5.0, 4.8, "right"), "EnCodec/C3": (1.0, -2.3, "left")}
+    LEG = {"resynth_vocos": "Vocos→F5", "resynth_glvocos": "GL→F5 (both)", "resynth_hift3": "HiFT→C3",
+           "resynth_s3vc3": "Token RT→C3", "resynth_bigvgan": "BigVGAN→Index"}
+    handles, seen = [], set()
     for x, y, lab, kind in pts:
-        ax3.scatter(x, y, **style[kind])
-        tx, ty = POS.get(lab, (x + 0.6, y))
-        col = "#555555" if kind == "ctrl" else "black"
-        ax3.annotate(lab, (x, y), xytext=(tx, ty), textcoords="data", fontsize=8.5, color=col,
-                     ha="left" if tx > x else "right", va="center",
-                     arrowprops=dict(arrowstyle="-", lw=0.5, color="#9a9a9a", shrinkA=0, shrinkB=3),
-                     bbox=dict(boxstyle="round,pad=0.12", fc="white", ec="none", alpha=0.85), zorder=5)
+        st = STY["ctrl"] if kind == "ctrl" else STY.get(kind, STY["resynth_vocos"])
+        h = ax3.scatter(x, y, zorder=3 if kind == "ctrl" else 4, **st)
+        if kind == "ctrl":
+            if "control" not in seen:
+                seen.add("control"); h.set_label("control"); handles.append(h)
+            tx, ty, ha = POS[lab]
+            ax3.annotate(lab, (x, y), xytext=(tx, ty), textcoords="data", fontsize=9, color="#555555",
+                         ha=ha, va="center",
+                         arrowprops=dict(arrowstyle="-", lw=0.4, color="#b0b0b0", shrinkA=0, shrinkB=3),
+                         bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none", alpha=0.85), zorder=5)
+        elif kind in LEG and kind not in seen:
+            seen.add(kind); h.set_label(LEG[kind]); handles.append(h)
+    order = ["resynth_vocos", "resynth_glvocos", "resynth_hift3", "resynth_s3vc3", "resynth_bigvgan", "control"]
+    handles = sorted(handles, key=lambda h: order.index(next(k for k, v in list(LEG.items()) + [("control", "control")] if v == h.get_label())))
+    fig.legend(handles=handles, loc="outside lower center", ncol=6, fontsize=9, frameon=False,
+               handlelength=1.0, columnspacing=0.8, handletextpad=0.3, borderaxespad=0)
     ax3.axhline(0, color="k", lw=0.6); ax3.axvline(0, color="k", lw=0.6)
     ax3.set_xlim(-2.2, 17.8); ax3.set_ylim(-3.0, 15.9)
     ax3.set_xlabel(r"translation $T_t$ ($\times10^{-3}$)", fontsize=9)
@@ -210,8 +231,8 @@ def fig_interv_layers():
         matched += [("resynth_hift", "HiFT→CosyV.2", "-"), ("resynth_s3vc", "S3 RT→CosyV.2", "-")]
     if "qwen3tts" in SYSTEMS:
         matched += [("resynth_qwencodec", "Qwen codec→Qwen3", "-.")]
-    leg_rows = (len(matched) + 3) // 4
-    leg_h = 0.16 * leg_rows + 0.06; fig_h = 2.10 + leg_h
+    leg_rows = (len(matched) + 1) // 2
+    leg_h = 0.13 * leg_rows + 0.08; fig_h = 1.88 + leg_h
     MK = {"resynth_vocos": "o", "resynth_glvocos": "x", "resynth_hift3": "^", "resynth_s3vc3": "s",
           "resynth_hift": "v", "resynth_s3vc": "D", "resynth_qwencodec": "P"}
     fig, axes = plt.subplots(1, 2, figsize=(COL, fig_h), sharey=True)
@@ -222,12 +243,12 @@ def fig_interv_layers():
             ax.plot(d.layer, d.delta_target, ls, lw=1.5, marker=MK.get(probe, "o"), ms=3.5, markevery=4,
                     label=lab if ssl == "wavlm" else None)
         ax.axhline(0, color="k", lw=0.6)
-        ax.set_title(name, fontsize=9)
+        ax.set_title(name, fontsize=9, pad=3)
         ax.set_xlabel("layer")
     axes[0].set_ylabel(r"$\Delta P$ to target")
-    fig.legend(fontsize=8, ncol=4, loc="upper center", bbox_to_anchor=(0.5, 1.02), frameon=False,
-               handlelength=1.4, columnspacing=0.6, handletextpad=0.3, borderaxespad=0)
-    fig.tight_layout(rect=[0, 0, 1, 1 - leg_h / fig_h])
+    fig.legend(fontsize=9, ncol=2, loc="upper center", bbox_to_anchor=(0.5, 1.0), frameon=False,
+               handlelength=1.4, columnspacing=1.0, handletextpad=0.3, borderaxespad=0)
+    fig.tight_layout(rect=[0, 0, 1, 1 - leg_h / fig_h], h_pad=0.2, pad=0.7)
     save(fig, "fig2_interv_layers")
 
 
