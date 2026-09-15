@@ -19,7 +19,9 @@ for ssl in wavlm hubert xlsr w2v2lv60 w2vbert; do
   for k in 101 102 103; do for s in $SYS; do f="results/embeddings/${ssl}_seeds20/${s}_s$k.npz"; [ -f "$f" ] && echo "$f" >> "$L/emb"; done; done
 done
 for ssl in wavlm w2vbert; do
-  for c in real $SYS; do f="results/embeddings/${ssl}_tn/$c.npz"; [ -f "$f" ] && echo "$f" >> "$L/emb"; done
+  # trim+RMS tag: the six main conditions plus the intervention probes, which control N2
+  # (the nuisance control on the RQ1 interventions) needs
+  for c in real $SYS $INTERV; do f="results/embeddings/${ssl}_tn/$c.npz"; [ -f "$f" ] && echo "$f" >> "$L/emb"; done
   for p in $PERTS; do for c in real $SYS; do f="results/embeddings/${ssl}_p_$p/$c.npz"; [ -f "$f" ] && echo "$f" >> "$L/emb"; done; done
 done
 RES=$(git ls-files results/paper5c17 2>/dev/null || ls results/paper5c17/*)
