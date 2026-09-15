@@ -241,6 +241,53 @@ def fig_retention():
     save(fig, "fig2_retention")
 
 
+def fig_knn_mechanism():
+    """Fig. 3, paired-neighbor diagnostic at a fixed WavLM L19: TTS-only macro-F1 of cosine
+    kNN (k=5, uniform votes) under three support-exclusion rules, as a dot plot with the rule
+    on the left and the score on the right. The neighbor composition of the query-only rule
+    sits in its own band below a rule, so the 71% top-5 share cannot be read as the 0.71
+    macro-F1 of the speaker-excluded rule. Point estimates: knn_mechanism.csv carries no CIs
+    for these three values, and the deep-band CIs of Table 3 come from a different, nested,
+    layer-selected evaluation."""
+    from matplotlib.patches import Rectangle  # noqa: F401  (kept for style parity)
+    df = pd.read_csv(OUT / "knn_mechanism.csv")
+    base = df[(df.ssl == "wavlm") & (df.layer == 19) & (df.weighting == "uniform")]
+    sc = base[base.k == 5].set_index("protocol")
+    rank1 = float(base[(base.k == 1) & (base.protocol == "loo")].iloc[0].same_utt_frac_topk)
+    top5 = float(sc.loc["loo", "same_utt_frac_topk"])
+    vals = [float(sc.loc[k, "macro_f1"]) for k in ["loo", "leave_utt", "leave_spk"]]
+    MUTED, BLUE, ROSE, RULE, PALE = "#566775", "#247BA8", "#C15365", "#CAD4DD", "#ECF1F5"
+    Wp, Hp = COL * 72, 116.64
+    fig = plt.figure(figsize=(COL, Hp / 72))
+    ax = fig.add_axes([0, 0, 1, 1]); ax.set_xlim(0, Wp); ax.set_ylim(0, Hp); ax.axis("off")
+
+    def tx(x, y, t, size=9, color="#243342", weight="normal", ha="left", va="baseline"):
+        ax.text(x, y, t, fontsize=size, color=color, fontweight=weight, ha=ha, va=va, clip_on=False)
+
+    tx(6, 104, "Support excludes", weight="bold")
+    tx(Wp - 6, 104, "Macro-F1", weight="bold", ha="right")
+    x0, x1 = 111, 204
+    for t, lab in [(0, "0"), (.5, "0.5"), (1, "1")]:
+        x = x0 + (x1 - x0) * t
+        ax.plot([x, x], [45, 92], color=PALE, lw=.65, zorder=0)
+        tx(x, 32, lab, color=MUTED, ha="center")
+    rows = [("Query only", vals[0], ROSE), ("Same utterance", vals[1], BLUE),
+            ("Same speaker", vals[2], BLUE)]
+    for y, (lab, v, col) in zip([85, 68, 51], rows):
+        tx(6, y, lab, va="center")
+        ax.plot([x0, x1], [y, y], color=RULE, lw=.7, zorder=1)
+        ax.plot([x0, x0 + (x1 - x0) * v], [y, y], color=col, lw=1.6, alpha=.55, zorder=2)
+        ax.plot(x0 + (x1 - x0) * v, y, "o", color=col, markersize=5.6, zorder=3)
+        tx(Wp - 6, y, f"{v:.2f}", size=9.5, color=col, weight="bold", ha="right", va="center")
+    # neighbor composition of the query-only rule, in its own band
+    ax.plot([5, Wp - 5], [26, 26], lw=.55, color=RULE, solid_capstyle="butt")
+    tx(6, 15, "Query only: same-utterance neighbors", color=MUTED)
+    tx(6, 3, "Rank 1", color=MUTED); tx(49, 3, f"{rank1:.0%}", weight="bold")
+    tx(130, 3, "Top 5", color=MUTED); tx(171, 3, f"{top5:.0%}", weight="bold")
+    assert_inside(fig, "fig2_knn_mechanism")
+    save(fig, "fig2_knn_mechanism")
+
+
 def fig_interv_layers():
     """Fig. 2: layer-wise Delta P to the hypothesized target for the architecture-matched probes and
     the mel-only Griffin-Lim probe (same colors and markers as Fig. 1)."""
@@ -284,3 +331,4 @@ if __name__ == "__main__":
     fig_robustAB()
     fig_retention()
     fig_interv_layers()
+    fig_knn_mechanism()

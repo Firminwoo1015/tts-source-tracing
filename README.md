@@ -42,11 +42,11 @@ DATA_LICENSES.md, NOTICE, LICENSE   per-source terms (corpora, models, our code 
 | §4.2 nuisance control on the interventions (trim+RMS applied to support set and queries) | `extract_embeddings.py --trim-norm --out-tag wavlm_tn`, `analyze_transplant2.py --ssl wavlm_tn`, `analyze_centroid2.py --ssl wavlm_tn --layer 0` | `intervention_wavlm_tn.csv`, `centroid2_wavlm_tn_L0.csv` |
 | Fig. 2 (layer-wise ΔP_t), §4.2 w2v-BERT L19 | `analyze_transplant2.py --ssl w2vbert`, `analyze_centroid2.py --ssl w2vbert --layer 19` | `intervention_w2vbert.csv`, `centroid2_w2vbert_L19.csv`, `fig2_interv_layers.pdf` |
 | §4.2 decoder-only control | `analyze_deconly.py` | `deconly_wavlm.csv`, `voc_vs_reference_wavlm.csv` |
-| Table 3 (early/deep bands), alternative bands | `analyze_bands.py`, `analyze_spkdisjoint_extras.py` | `bands_spkdisjoint.csv`, `bands_alt.csv` |
+| Table 3 (early/deep bands), §4.3 L20--L24 band | `analyze_bands.py`, `analyze_spkdisjoint_extras.py` | `bands_spkdisjoint.csv`, `bands_alt.csv` |
 | §4.3 logistic / centroid / kNN deep-band probes | `analyze_deep_probe.py` | `deep_probe.csv` |
-| §4.3 paired-kNN mechanism (LOO, leave-utterance/speaker-out, same-utterance fraction, ties) | `analyze_knn_mechanism.py` | `knn_mechanism.csv` |
+| Fig. 3, §4.3 paired-kNN mechanism (LOO, leave-utterance/speaker-out, same-utterance fraction, ties) | `analyze_knn_mechanism.py`, `plot_figures2.py` | `knn_mechanism.csv`, `fig2_knn_mechanism.pdf` |
 | §4.3 Whisper WER and WER=0 subset (both evaluated under the released `speaker_folds.json` split) | `run_asr.py`, `analyze_asr.py` | `asr_wer.csv`, `asr_summary.csv`, `asr_perfect_deepband.csv` |
-| Table 4 (cross-condition stress test; w2v-BERT released) | `analyze_robustB3.py` | `robustB3_{wavlm,w2vbert}.csv` |
+| §4.4 cross-condition stress test (per-perturbation detail is released here, the paper reports ranges) | `analyze_robustB3.py` | `robustB3_{wavlm,w2vbert}.csv` |
 | every number quoted in the text | `paper_numbers.py` | `PAPER_NUMBERS2.json` |
 
 Protocol in one paragraph: outer speaker-disjoint 5-fold GroupKFold with nested inner
