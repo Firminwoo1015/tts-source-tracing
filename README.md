@@ -44,7 +44,7 @@ DATA_LICENSES.md, NOTICE, LICENSE   per-source terms (corpora, models, our code 
 | §4.2 decoder-only control | `analyze_deconly.py` | `deconly_wavlm.csv`, `voc_vs_reference_wavlm.csv` |
 | Table 3 (early/deep bands), §4.3 L20--L24 band | `analyze_bands.py`, `analyze_spkdisjoint_extras.py` | `bands_spkdisjoint.csv`, `bands_alt.csv` |
 | §4.3 logistic / centroid / kNN deep-band probes | `analyze_deep_probe.py` | `deep_probe.csv` |
-| Fig. 3, §4.3 paired-kNN mechanism (LOO, leave-utterance/speaker-out, same-utterance fraction, ties) | `analyze_knn_mechanism.py`, `plot_figures2.py` | `knn_mechanism.csv`, `fig2_knn_mechanism.pdf` |
+| Table 4, §4.3 paired-kNN mechanism (LOO, leave-utterance/speaker-out, same-utterance fraction, ties) | `analyze_knn_mechanism.py` | `knn_mechanism.csv` |
 | §4.3 Whisper WER and WER=0 subset (both evaluated under the released `speaker_folds.json` split) | `run_asr.py`, `analyze_asr.py` | `asr_wer.csv`, `asr_summary.csv`, `asr_perfect_deepband.csv` |
 | §4.4 cross-condition stress test (per-perturbation detail is released here, the paper reports ranges) | `analyze_robustB3.py` | `robustB3_{wavlm,w2vbert}.csv` |
 | every number quoted in the text | `paper_numbers.py` | `PAPER_NUMBERS2.json` |
