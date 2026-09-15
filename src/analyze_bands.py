@@ -40,10 +40,23 @@ def knn():
     return KNeighborsClassifier(5, metric="cosine")
 
 
-def band_pred(embs, y, g, band):
-    outer = GroupKFold(5)
+def band_pred(embs, y, g, band, folds=None):
+    """Nested band-restricted kNN prediction.
+
+    `folds` optionally fixes the outer speaker->fold assignment (e.g. the released
+    data/manifests/speaker_folds.json). Passing it keeps the speaker split identical
+    across subsets of the data, which GroupKFold cannot do because it re-balances
+    fold sizes whenever the sample count changes. Default None reproduces the
+    original GroupKFold(5) behaviour exactly.
+    """
+    if folds is None:
+        splits = list(GroupKFold(5).split(embs[:, 0], y, groups=g))
+    else:
+        fid = np.array([folds[str(s)] for s in g])
+        splits = [(np.where(fid != k)[0], np.where(fid == k)[0])
+                  for k in sorted(set(fid.tolist()))]
     pred = np.empty(len(y), dtype=object)
-    for tr, te in outer.split(embs[:, 0], y, groups=g):
+    for tr, te in splits:
         best_l, best_f = band[0], -1
         inner = GroupKFold(4)
         for l in band:

@@ -12,6 +12,7 @@ Output: results/paper/asr_summary.csv, asr_feature_baseline.csv,
         asr_perfect_deepband.csv
 """
 
+import json
 import os
 from pathlib import Path
 
@@ -72,6 +73,7 @@ def main():
     import sys
     sys.path.insert(0, str(Path(__file__).parent))
     from analyze_bands import band_pred
+    FOLDS = json.loads((ROOT / "data/manifests/speaker_folds.json").read_text())
 
     tts_df = df[df.cond != "real"]
     perfect_all = set.intersection(*[
@@ -89,9 +91,12 @@ def main():
         X = np.concatenate(X)
         y, g, uid = np.array(y), np.array(g), np.array(uid)
         mask = np.isin(uid, list(perfect_all))
-        full = f1_score(y, band_pred(X, y, g, list(DEEP)), average="macro")
-        sub = f1_score(y[mask], band_pred(X[mask], y[mask], g[mask], list(DEEP)),
-                       average="macro")
+        # Reuse one fixed speaker->fold map for both evaluations: GroupKFold would
+        # re-balance the folds on the smaller WER=0 subset, so the two numbers would
+        # not share the speaker split they are compared under.
+        full = f1_score(y, band_pred(X, y, g, list(DEEP), folds=FOLDS), average="macro")
+        sub = f1_score(y[mask], band_pred(X[mask], y[mask], g[mask], list(DEEP),
+                                          folds=FOLDS), average="macro")
         rows.append({"ssl": ssl, "deepband_full": full, "deepband_wer0_all": sub,
                      "n_ids_wer0_all": len(perfect_all), "n_samples": int(mask.sum())})
         print(rows[-1])

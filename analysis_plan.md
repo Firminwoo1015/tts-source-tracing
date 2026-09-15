@@ -74,3 +74,25 @@ this plan and is not covered by it.
   [0.06, 0.13]; the selected w2v-BERT layer moved from L3 to L18 in every fold → the paper reports the
   dependence rather than invariance.
 
+## N2. Nuisance control on the RQ1 interventions (`analyze_transplant2.py --ssl wavlm_tn`, `analyze_centroid2.py --ssl wavlm_tn --layer 0`)
+* Added after the plan above, in response to external review. Same intervention design as C, but every
+  condition (natural-speech support set, clean real queries, resynthesized queries) is embedded from
+  audio that was silence-trimmed (librosa, top_db=35) and RMS-normalized to 0.05, i.e. the tag
+  `wavlm_tn`. WavLM L0, same probes, targets and bootstrap as the raw-condition run.
+* Rule: report the effect as convention-independent only if every matched path keeps ΔP_t above zero;
+  report any change in the control comparison separately rather than replacing the raw-condition numbers.
+* **Outcome:** all matched paths keep ΔP_t above zero (Vocos .49→.55, GL-Vocos .64→.73, GL-generic
+  .62→.73, HiFT .43→.38, token round trip .49→.55, BigVGAN .08→.08). The control comparison moves:
+  G_min becomes 3.8 [2.3,5.4] for Vocos (raw 1.2 [−0.002,2.5]) and 3.7 [3.2,4.3] for the token round
+  trip (raw 1.8 [1.5,2.2]), so all three matched paths exceed the strongest neural control under the
+  normalized condition while only two do in the raw condition. The paper reports both.
+
+## Corrections applied after the first release of these files
+* `asr_wer.csv` had been produced with an earlier QC mask (`exclude7.txt`, 19 IDs) and so held 371 of
+  the 373 paired IDs per condition. The two missing IDs (`3729-6852-0013`, `61-70970-0030`) were
+  transcribed with the same model and scoring functions and merged in; the ASR-derived numbers were
+  recomputed. The WER=0 intersection grew from 204 to 205 IDs.
+* `band_pred` regenerated a `GroupKFold(5)` split on every call, so the WER=0 subset was evaluated
+  under a different speaker split from the full set. It now accepts a fixed speaker→fold map and
+  `analyze_asr.py` passes the released `speaker_folds.json` to both evaluations. On the full set this
+  reproduces the previous split exactly, so `deepband_full` is unchanged.

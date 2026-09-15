@@ -38,13 +38,14 @@ DATA_LICENSES.md, NOTICE, LICENSE   per-source terms (corpora, models, our code 
 | Table 1 (speaker-disjoint macro-F1, 5 encoders + baselines), §4.1 per-class recall | `analyze_cloning.py`, `analyze_mfcc_cloning.py`, `analyze_simplecues.py`, `analyze_asr.py` | `cloning_summary_{ssl}.csv`, `cloning_ttsonly_{perclass,confusion}_wavlm.csv`, `mfcc_cloning.csv`, `simplecues.csv`, `asr_feature_baseline.csv` |
 | §4.1 trim+RMS nuisance control (paired difference CIs) | `analyze_normalization_control.py` | `normalization_control.csv` |
 | §4.1 controlled-seed study | `analyze_seeds2.py` | `seeds2_{transfer,geometry,stochasticity}.csv` |
-| Fig. 1, Table 2 (ΔP_t, S_t, T_t, G_t, G_adj and the strongest-control gap G_min at 10,000 replicates) | `analyze_transplant2.py`, `analyze_centroid2.py`, `plot_figures2.py` | `intervention_wavlm.csv`, `centroid2_wavlm_L0.csv` (rows `*_vs_unmatched`, `*_vs_strongest`, `<control>_under_<target>`; Griffin–Lim `T_lo/T_hi`), `fig2_intervention.pdf` |
+| Fig. 1, Table 2 (ΔP_t, S_t, T_t, G_t, G_adj and the strongest neural-control gap G_min at 10,000 replicates) | `analyze_transplant2.py`, `analyze_centroid2.py`, `plot_figures2.py` | `intervention_wavlm.csv`, `centroid2_wavlm_L0.csv` (rows `*_vs_unmatched`, `*_vs_strongest`, `<control>_under_<target>`; Griffin–Lim `T_lo/T_hi`), `fig2_intervention.pdf` |
+| §4.2 nuisance control on the interventions (trim+RMS applied to support set and queries) | `extract_embeddings.py --trim-norm --out-tag wavlm_tn`, `analyze_transplant2.py --ssl wavlm_tn`, `analyze_centroid2.py --ssl wavlm_tn --layer 0` | `intervention_wavlm_tn.csv`, `centroid2_wavlm_tn_L0.csv` |
 | Fig. 2 (layer-wise ΔP_t), §4.2 w2v-BERT L19 | `analyze_transplant2.py --ssl w2vbert`, `analyze_centroid2.py --ssl w2vbert --layer 19` | `intervention_w2vbert.csv`, `centroid2_w2vbert_L19.csv`, `fig2_interv_layers.pdf` |
 | §4.2 decoder-only control | `analyze_deconly.py` | `deconly_wavlm.csv`, `voc_vs_reference_wavlm.csv` |
 | Table 3 (early/deep bands), alternative bands | `analyze_bands.py`, `analyze_spkdisjoint_extras.py` | `bands_spkdisjoint.csv`, `bands_alt.csv` |
 | §4.3 logistic / centroid / kNN deep-band probes | `analyze_deep_probe.py` | `deep_probe.csv` |
 | §4.3 paired-kNN mechanism (LOO, leave-utterance/speaker-out, same-utterance fraction, ties) | `analyze_knn_mechanism.py` | `knn_mechanism.csv` |
-| §4.3 Whisper WER and WER=0 subset | `run_asr.py`, `analyze_asr.py` | `asr_wer.csv`, `asr_summary.csv`, `asr_perfect_deepband.csv` |
+| §4.3 Whisper WER and WER=0 subset (both evaluated under the released `speaker_folds.json` split) | `run_asr.py`, `analyze_asr.py` | `asr_wer.csv`, `asr_summary.csv`, `asr_perfect_deepband.csv` |
 | Table 4 (cross-condition stress test; w2v-BERT released) | `analyze_robustB3.py` | `robustB3_{wavlm,w2vbert}.csv` |
 | every number quoted in the text | `paper_numbers.py` | `PAPER_NUMBERS2.json` |
 
@@ -52,7 +53,10 @@ Protocol in one paragraph: outer speaker-disjoint 5-fold GroupKFold with nested 
 GroupKFold(4) layer selection; cosine kNN (k=5, majority vote, ties to the first class in sorted
 label order) on L2-normalised mean-pooled layer embeddings; macro-F1 with 1,000 speaker-level
 bootstrap replicates (10,000 for the strongest-control rows); interventions are speaker-disjoint and
-their targets are fixed from the architecture. Baselines use the same folds and kNN. Full definitions
+their targets are fixed from the architecture. Baselines use the same folds and kNN. Where an
+analysis is run on a subset of the utterances, the outer speaker split is taken from
+`data/manifests/speaker_folds.json` instead of being regenerated, so the subset and the full set
+are compared under one split. Full definitions
 of the intervention metrics and the stress-test operators are in the paper (§3) and in
 `analysis_plan.md`.
 

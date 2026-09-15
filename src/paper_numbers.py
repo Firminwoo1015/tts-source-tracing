@@ -120,6 +120,26 @@ for s in ['wavlm','w2vbert']:
             out['T4']="\n".join(T4)
 # ---------- N
 if (P/'normalization_control.csv').exists(): out['norm']=pd.read_csv(P/'normalization_control.csv').round(3).to_dict('records')
+# ---------- N2: nuisance control on the RQ1 interventions (trim+RMS embeddings, tag wavlm_tn)
+if (P/'intervention_wavlm_tn.csv').exists() and (P/'centroid2_wavlm_tn_L0.csv').exists():
+    tn=pd.read_csv(P/'intervention_wavlm_tn.csv'); tn0=tn[tn.layer==0].set_index('probe')
+    tg=pd.read_csv(P/'centroid2_wavlm_tn_L0.csv').set_index('probe')
+    n2={}
+    for pr in ['resynth_vocos','resynth_hift3','resynth_s3vc3']:
+        e={}
+        if pr in tn0.index:
+            e['dP_t']=round(float(tn0.loc[pr,'delta_target']),4)
+            e['dP_ci']=[round(float(tn0.loc[pr,'delta_ci_lo']),4), round(float(tn0.loc[pr,'delta_ci_hi']),4)]
+        k=pr+'_vs_strongest'
+        if k in tg.index:
+            e['G_min_e3']=round(float(tg.loc[k,'G_min'])*1e3,3)
+            e['G_min_ci_e3']=[round(float(tg.loc[k,'G_min_lo'])*1e3,3), round(float(tg.loc[k,'G_min_hi'])*1e3,3)]
+        n2[pr]=e
+    for pr in ['resynth_glvocos','resynth_griffinlim']:
+        if pr in tg.index:
+            n2[pr]={'T_e3':round(float(tg.loc[pr,'T'])*1e3,3),
+                    'T_ci_e3':[round(float(tg.loc[pr,'T_lo'])*1e3,3), round(float(tg.loc[pr,'T_hi'])*1e3,3)]}
+    out['nuisance_intervention_tn']=n2
 # ---------- D
 for nm in ['seeds2_transfer','seeds2_geometry','seeds2_stochasticity']:
     if (P/f'{nm}.csv').exists(): out[nm]=pd.read_csv(P/f'{nm}.csv').round(4).to_dict('records')

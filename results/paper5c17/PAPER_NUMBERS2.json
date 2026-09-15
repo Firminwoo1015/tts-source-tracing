@@ -1,5 +1,5 @@
 {
- "T1": "WavLM-Large & .72 [.68,.75] & .80 [.77,.83] \\\\\nHuBERT-Large & .69 [.66,.72] & .74 [.71,.77] \\\\\nXLS-R 300M & .73 [.70,.75] & .79 [.75,.82] \\\\\nwav2vec2-LV60 & .69 [.65,.72] & .74 [.71,.78] \\\\\nw2v-BERT 2.0 & \\textbf{.78} [.75,.82] & \\textbf{.82} [.78,.85] \\\\\n\\midrule\nMFCC(40)$+$stats & .39 [.36,.42] & .43 [.40,.46] \\\\\nProsodic cues & .40 [.37,.43] & .46 [.43,.49] \\\\\nWhisper-error stats & .15 [.14,.16] & .18 [.16,.20] \\\\",
+ "T1": "WavLM-Large & .72 [.68,.75] & .80 [.77,.83] \\\\\nHuBERT-Large & .69 [.66,.72] & .74 [.71,.77] \\\\\nXLS-R 300M & .73 [.70,.75] & .79 [.75,.82] \\\\\nwav2vec2-LV60 & .69 [.65,.72] & .74 [.71,.78] \\\\\nw2v-BERT 2.0 & \\textbf{.78} [.75,.82] & \\textbf{.82} [.78,.85] \\\\\n\\midrule\nMFCC(40)$+$stats & .39 [.36,.42] & .43 [.40,.46] \\\\\nProsodic cues & .40 [.37,.43] & .46 [.43,.49] \\\\\nWhisper-error stats & .11 [.10,.12] & .17 [.15,.18] \\\\",
  "t1": {
   "wavlm": {
    "kway": [
@@ -107,8 +107,8 @@
    0.4614414000473547
   ],
   "whi": [
-   0.1482921840661636,
-   0.1839417588379367
+   0.1125714056841385,
+   0.1677070376705788
   ]
  },
  "best": "w2vbert",
@@ -495,7 +495,7 @@
    "wer_median": 0.0,
    "cer_mean": 0.01,
    "cer_median": 0.0,
-   "wer0_rate": 0.779
+   "wer0_rate": 0.78
   },
   {
    "cond": "cosyvoice3",
@@ -503,15 +503,15 @@
    "wer_median": 0.0,
    "cer_mean": 0.01,
    "cer_median": 0.0,
-   "wer0_rate": 0.774
+   "wer0_rate": 0.772
   },
   {
    "cond": "f5tts",
-   "wer_mean": 0.028,
+   "wer_mean": 0.029,
    "wer_median": 0.0,
-   "cer_mean": 0.01,
+   "cer_mean": 0.011,
    "cer_median": 0.0,
-   "wer0_rate": 0.771
+   "wer0_rate": 0.769
   },
   {
    "cond": "indextts",
@@ -519,7 +519,7 @@
    "wer_median": 0.0,
    "cer_mean": 0.01,
    "cer_median": 0.0,
-   "wer0_rate": 0.771
+   "wer0_rate": 0.769
   },
   {
    "cond": "real",
@@ -527,52 +527,52 @@
    "wer_median": 0.0,
    "cer_mean": 0.014,
    "cer_median": 0.0,
-   "wer0_rate": 0.714
+   "wer0_rate": 0.713
   },
   {
    "cond": "xtts",
    "wer_mean": 0.039,
    "wer_median": 0.0,
-   "cer_mean": 0.017,
+   "cer_mean": 0.018,
    "cer_median": 0.0,
-   "wer0_rate": 0.712
+   "wer0_rate": 0.71
   }
  ],
  "asr_perfect": [
   {
    "ssl": "wavlm",
    "deepband_full": 0.74,
-   "deepband_wer0_all": 0.719,
-   "n_ids_wer0_all": 204,
-   "n_samples": 1020
+   "deepband_wer0_all": 0.736,
+   "n_ids_wer0_all": 205,
+   "n_samples": 1025
   },
   {
    "ssl": "hubert",
    "deepband_full": 0.685,
-   "deepband_wer0_all": 0.664,
-   "n_ids_wer0_all": 204,
-   "n_samples": 1020
+   "deepband_wer0_all": 0.655,
+   "n_ids_wer0_all": 205,
+   "n_samples": 1025
   },
   {
    "ssl": "xlsr",
    "deepband_full": 0.778,
-   "deepband_wer0_all": 0.775,
-   "n_ids_wer0_all": 204,
-   "n_samples": 1020
+   "deepband_wer0_all": 0.762,
+   "n_ids_wer0_all": 205,
+   "n_samples": 1025
   },
   {
    "ssl": "w2v2lv60",
    "deepband_full": 0.749,
-   "deepband_wer0_all": 0.741,
-   "n_ids_wer0_all": 204,
-   "n_samples": 1020
+   "deepband_wer0_all": 0.764,
+   "n_ids_wer0_all": 205,
+   "n_samples": 1025
   },
   {
    "ssl": "w2vbert",
    "deepband_full": 0.813,
-   "deepband_wer0_all": 0.808,
-   "n_ids_wer0_all": 204,
-   "n_samples": 1020
+   "deepband_wer0_all": 0.814,
+   "n_ids_wer0_all": 205,
+   "n_samples": 1025
   }
  ],
  "G_min": {
@@ -1355,15 +1355,6 @@
   },
   {
    "ssl": "wavlm",
-   "band": "early",
-   "classifier": "centroid",
-   "macro_f1": 0.859,
-   "ci_lo": 0.825,
-   "ci_hi": 0.887,
-   "chosen": "[(5, 1.0), (4, 1.0), (4, 1.0), (4, 1.0), (4, 1.0)]"
-  },
-  {
-   "ssl": "wavlm",
    "band": "deep",
    "classifier": "knn",
    "macro_f1": 0.74,
@@ -1379,15 +1370,6 @@
    "ci_lo": 0.872,
    "ci_hi": 0.919,
    "chosen": "[(21, 10.0), (21, 10.0), (21, 10.0), (21, 10.0), (21, 10.0)]"
-  },
-  {
-   "ssl": "wavlm",
-   "band": "deep",
-   "classifier": "centroid",
-   "macro_f1": 0.78,
-   "ci_lo": 0.743,
-   "ci_hi": 0.815,
-   "chosen": "[(21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0)]"
   },
   {
    "ssl": "hubert",
@@ -1409,15 +1391,6 @@
   },
   {
    "ssl": "hubert",
-   "band": "early",
-   "classifier": "centroid",
-   "macro_f1": 0.744,
-   "ci_lo": 0.709,
-   "ci_hi": 0.776,
-   "chosen": "[(3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0)]"
-  },
-  {
-   "ssl": "hubert",
    "band": "deep",
    "classifier": "knn",
    "macro_f1": 0.685,
@@ -1433,15 +1406,6 @@
    "ci_lo": 0.85,
    "ci_hi": 0.9,
    "chosen": "[(21, 10.0), (21, 10.0), (21, 10.0), (21, 10.0), (21, 10.0)]"
-  },
-  {
-   "ssl": "hubert",
-   "band": "deep",
-   "classifier": "centroid",
-   "macro_f1": 0.711,
-   "ci_lo": 0.675,
-   "ci_hi": 0.745,
-   "chosen": "[(21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0)]"
   },
   {
    "ssl": "xlsr",
@@ -1463,15 +1427,6 @@
   },
   {
    "ssl": "xlsr",
-   "band": "early",
-   "classifier": "centroid",
-   "macro_f1": 0.838,
-   "ci_lo": 0.801,
-   "ci_hi": 0.876,
-   "chosen": "[(5, 1.0), (5, 1.0), (5, 1.0), (5, 1.0), (5, 1.0)]"
-  },
-  {
-   "ssl": "xlsr",
    "band": "deep",
    "classifier": "knn",
    "macro_f1": 0.778,
@@ -1487,15 +1442,6 @@
    "ci_lo": 0.862,
    "ci_hi": 0.924,
    "chosen": "[(19, 10.0), (19, 10.0), (19, 10.0), (19, 10.0), (19, 10.0)]"
-  },
-  {
-   "ssl": "xlsr",
-   "band": "deep",
-   "classifier": "centroid",
-   "macro_f1": 0.818,
-   "ci_lo": 0.777,
-   "ci_hi": 0.852,
-   "chosen": "[(19, 1.0), (19, 1.0), (19, 1.0), (19, 1.0), (19, 1.0)]"
   },
   {
    "ssl": "w2v2lv60",
@@ -1517,15 +1463,6 @@
   },
   {
    "ssl": "w2v2lv60",
-   "band": "early",
-   "classifier": "centroid",
-   "macro_f1": 0.805,
-   "ci_lo": 0.768,
-   "ci_hi": 0.842,
-   "chosen": "[(3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0)]"
-  },
-  {
-   "ssl": "w2v2lv60",
    "band": "deep",
    "classifier": "knn",
    "macro_f1": 0.749,
@@ -1541,15 +1478,6 @@
    "ci_lo": 0.893,
    "ci_hi": 0.936,
    "chosen": "[(21, 10.0), (21, 10.0), (20, 10.0), (20, 10.0), (21, 10.0)]"
-  },
-  {
-   "ssl": "w2v2lv60",
-   "band": "deep",
-   "classifier": "centroid",
-   "macro_f1": 0.825,
-   "ci_lo": 0.794,
-   "ci_hi": 0.856,
-   "chosen": "[(21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0)]"
   },
   {
    "ssl": "w2vbert",
@@ -1571,15 +1499,6 @@
   },
   {
    "ssl": "w2vbert",
-   "band": "early",
-   "classifier": "centroid",
-   "macro_f1": 0.859,
-   "ci_lo": 0.824,
-   "ci_hi": 0.888,
-   "chosen": "[(3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0)]"
-  },
-  {
-   "ssl": "w2vbert",
    "band": "deep",
    "classifier": "knn",
    "macro_f1": 0.813,
@@ -1597,18 +1516,99 @@
    "chosen": "[(17, 10.0), (17, 10.0), (17, 10.0), (17, 10.0), (17, 10.0)]"
   },
   {
+   "ssl": "wavlm",
+   "band": "early",
+   "classifier": "centroid",
+   "macro_f1": 0.857,
+   "ci_lo": 0.823,
+   "ci_hi": 0.888,
+   "chosen": "[(5, 1.0), (4, 1.0), (4, 1.0), (4, 1.0), (4, 1.0)]"
+  },
+  {
+   "ssl": "wavlm",
+   "band": "deep",
+   "classifier": "centroid",
+   "macro_f1": 0.78,
+   "ci_lo": 0.743,
+   "ci_hi": 0.813,
+   "chosen": "[(21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0)]"
+  },
+  {
+   "ssl": "hubert",
+   "band": "early",
+   "classifier": "centroid",
+   "macro_f1": 0.744,
+   "ci_lo": 0.705,
+   "ci_hi": 0.775,
+   "chosen": "[(3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0)]"
+  },
+  {
+   "ssl": "hubert",
+   "band": "deep",
+   "classifier": "centroid",
+   "macro_f1": 0.712,
+   "ci_lo": 0.677,
+   "ci_hi": 0.747,
+   "chosen": "[(21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0)]"
+  },
+  {
+   "ssl": "xlsr",
+   "band": "early",
+   "classifier": "centroid",
+   "macro_f1": 0.834,
+   "ci_lo": 0.793,
+   "ci_hi": 0.868,
+   "chosen": "[(5, 1.0), (4, 1.0), (5, 1.0), (5, 1.0), (5, 1.0)]"
+  },
+  {
+   "ssl": "xlsr",
+   "band": "deep",
+   "classifier": "centroid",
+   "macro_f1": 0.82,
+   "ci_lo": 0.783,
+   "ci_hi": 0.854,
+   "chosen": "[(19, 1.0), (19, 1.0), (19, 1.0), (19, 1.0), (19, 1.0)]"
+  },
+  {
+   "ssl": "w2v2lv60",
+   "band": "early",
+   "classifier": "centroid",
+   "macro_f1": 0.804,
+   "ci_lo": 0.768,
+   "ci_hi": 0.843,
+   "chosen": "[(3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0)]"
+  },
+  {
+   "ssl": "w2v2lv60",
+   "band": "deep",
+   "classifier": "centroid",
+   "macro_f1": 0.824,
+   "ci_lo": 0.793,
+   "ci_hi": 0.856,
+   "chosen": "[(21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0), (21, 1.0)]"
+  },
+  {
+   "ssl": "w2vbert",
+   "band": "early",
+   "classifier": "centroid",
+   "macro_f1": 0.858,
+   "ci_lo": 0.825,
+   "ci_hi": 0.89,
+   "chosen": "[(3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0), (3, 1.0)]"
+  },
+  {
    "ssl": "w2vbert",
    "band": "deep",
    "classifier": "centroid",
-   "macro_f1": 0.852,
-   "ci_lo": 0.817,
-   "ci_hi": 0.884,
+   "macro_f1": 0.851,
+   "ci_lo": 0.818,
+   "ci_hi": 0.883,
    "chosen": "[(17, 1.0), (17, 1.0), (17, 1.0), (17, 1.0), (17, 1.0)]"
   }
  ],
  "deep_probe_pivot": {
   "hubert_deep": {
-   "centroid": 0.711,
+   "centroid": 0.712,
    "knn": 0.685,
    "logreg": 0.875
   },
@@ -1618,22 +1618,22 @@
    "logreg": 0.96
   },
   "w2v2lv60_deep": {
-   "centroid": 0.825,
+   "centroid": 0.824,
    "knn": 0.749,
    "logreg": 0.917
   },
   "w2v2lv60_early": {
-   "centroid": 0.805,
+   "centroid": 0.804,
    "knn": 0.732,
    "logreg": 0.921
   },
   "w2vbert_deep": {
-   "centroid": 0.852,
+   "centroid": 0.851,
    "knn": 0.813,
    "logreg": 0.94
   },
   "w2vbert_early": {
-   "centroid": 0.859,
+   "centroid": 0.858,
    "knn": 0.833,
    "logreg": 0.953
   },
@@ -1643,17 +1643,17 @@
    "logreg": 0.896
   },
   "wavlm_early": {
-   "centroid": 0.859,
+   "centroid": 0.857,
    "knn": 0.803,
    "logreg": 0.957
   },
   "xlsr_deep": {
-   "centroid": 0.818,
+   "centroid": 0.82,
    "knn": 0.778,
    "logreg": 0.894
   },
   "xlsr_early": {
-   "centroid": 0.838,
+   "centroid": 0.834,
    "knn": 0.802,
    "logreg": 0.953
   }
@@ -3717,6 +3717,58 @@
    "diff_hi": 0.084
   }
  ],
+ "nuisance_intervention_tn": {
+  "resynth_vocos": {
+   "dP_t": 0.5469,
+   "dP_ci": [
+    0.4378,
+    0.6554
+   ],
+   "G_min_e3": 3.836,
+   "G_min_ci_e3": [
+    2.249,
+    5.433
+   ]
+  },
+  "resynth_hift3": {
+   "dP_t": 0.378,
+   "dP_ci": [
+    0.306,
+    0.457
+   ],
+   "G_min_e3": 0.574,
+   "G_min_ci_e3": [
+    0.258,
+    0.88
+   ]
+  },
+  "resynth_s3vc3": {
+   "dP_t": 0.5496,
+   "dP_ci": [
+    0.4574,
+    0.6391
+   ],
+   "G_min_e3": 3.718,
+   "G_min_ci_e3": [
+    3.15,
+    4.308
+   ]
+  },
+  "resynth_glvocos": {
+   "T_e3": 1.891,
+   "T_ci_e3": [
+    -0.216,
+    3.955
+   ]
+  },
+  "resynth_griffinlim": {
+   "T_e3": 2.473,
+   "T_ci_e3": [
+    0.173,
+    4.877
+   ]
+  }
+ },
  "seeds2_transfer": [
   {
    "ssl": "wavlm",

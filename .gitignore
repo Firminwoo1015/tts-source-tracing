@@ -40,6 +40,7 @@
 !/results/paper5c17/bands_spkdisjoint.csv
 !/results/paper5c17/centroid2_w2vbert_L19.csv
 !/results/paper5c17/centroid2_wavlm_L0.csv
+!/results/paper5c17/centroid2_wavlm_tn_L0.csv
 !/results/paper5c17/cloning_summary_hubert.csv
 !/results/paper5c17/cloning_summary_w2v2lv60.csv
 !/results/paper5c17/cloning_summary_w2vbert.csv
@@ -55,6 +56,7 @@
 !/results/paper5c17/fig2_interv_layers.png
 !/results/paper5c17/intervention_w2vbert.csv
 !/results/paper5c17/intervention_wavlm.csv
+!/results/paper5c17/intervention_wavlm_tn.csv
 !/results/paper5c17/knn_mechanism.csv
 !/results/paper5c17/mfcc_cloning.csv
 !/results/paper5c17/normalization_control.csv

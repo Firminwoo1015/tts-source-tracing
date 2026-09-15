@@ -23,6 +23,14 @@ python src/analyze_deep_probe.py                                # §4.3 logistic
 python src/analyze_knn_mechanism.py                             # §4.3 paired-kNN mechanism
 python src/analyze_robustB3.py                                  # Table 4 (WavLM) + w2v-BERT
 python src/analyze_normalization_control.py                     # §4.1 trim+RMS control
+# §4.2 nuisance control on the interventions (control N2): needs the trim+RMS embeddings,
+#   python src/extract_embeddings.py --ssl wavlm --trim-norm --out-tag wavlm_tn --conditions \
+#     real f5tts xtts cosyvoice3 chatterbox indextts resynth_vocos resynth_glvocos \
+#     resynth_griffinlim resynth_hift3 resynth_s3vc3 resynth_bigvgan resynth_encodec resynth_dac
+if [ -f results/embeddings/wavlm_tn/resynth_vocos.npz ]; then
+  python src/analyze_transplant2.py --ssl wavlm_tn --layers 0 2 4 8 19   # §4.2 normalized target shifts
+  python src/analyze_centroid2.py   --ssl wavlm_tn --layer 0             # §4.2 normalized G_adj, G_min
+fi
 python src/analyze_seeds2.py                                    # §4.1 controlled-seed study
 python src/plot_figures2.py                                     # fig2_intervention, fig2_interv_layers
 python src/paper_numbers.py results/paper5c17                   # PAPER_NUMBERS2.json (every quoted number)
