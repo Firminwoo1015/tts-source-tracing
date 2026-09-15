@@ -268,12 +268,12 @@ def fig_interv_layers():
         df = pd.read_csv(OUT / f"intervention_{ssl}.csv")
         style_axis(ax)
         ax.set_xlim(-.6, 24.6); ax.set_ylim(-.13, 1.05)
-        # ticks at the layers the text interprets; L0-L2 is marked by the shading
-        # instead of a tick, which would collide with the 0 label at this size
+        # ticks at the layers the text interprets. A tick at 2 is not available: at this
+        # width layers 0 and 2 are 6.5 pt apart and each label is 6 pt wide, so they touch.
+        # The early peak is legible from the curves themselves, so it carries no marker.
         ax.set_xticks([0, 12, 19, 24], ["0", "12", "19", "24"])
         ax.set_yticks([0, .5, 1])
         ax.set_title(title, pad=5, fontsize=9, color=INK)
-        ax.axvspan(-.6, 2, color="#EDF2F6", zorder=0)          # early band read in the text
         ax.axvline(19, color="#9DA9B2", lw=.6, ls=":", zorder=1)
         ax.axhline(0, color="#9DA9B2", lw=.7); ax.grid(axis="y", color=LIGHT, lw=.6)
         ax.set_xlabel("Layer", labelpad=3)
