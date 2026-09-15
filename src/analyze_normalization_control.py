@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from analyze_cloning import load_all, nested_spk_disjoint, speaker_bootstrap_f1, CLONING
 
 ROOT = Path(os.environ.get("TTS_ANAL_ROOT", Path(__file__).resolve().parents[1]))
-RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/paper5c17")
+RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/final")
 
 
 def main():

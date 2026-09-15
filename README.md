@@ -21,7 +21,7 @@ data/manifests/        main.jsonl (390 target utterances, 39 speakers, enrollmen
                        speaker-disjoint folds), seedsub20.jsonl (controlled-seed subset: 20 speakers × 3)
 src/gen/               generation and intervention scripts (one conda env per TTS system, see below)
 src/                   embedding extraction, ASR, analyses, figures, provenance builders
-results/paper5c17/     every table/figure input of the paper (CSV), fig2_*.pdf, PAPER_NUMBERS2.json
+results/final/         every table/figure input of the paper (CSV), fig2_*.pdf, PAPER_NUMBERS2.json
 provenance.json        checkpoint revisions and per-file SHA-256, third-party commits, licenses
 provenance_files.jsonl.gz  one record per released waveform (SHA-256, format, checkpoint, wrapper
                        version/commit, inference settings, seed policy, enrollment/text hashes)
@@ -31,7 +31,7 @@ analysis_plan.md       pre-specified protocol and interpretation rules of the ad
 DATA_LICENSES.md, NOTICE, LICENSE   per-source terms (corpora, models, our code = MIT)
 ```
 
-## 2. Claim → file map (all under `results/paper5c17/`)
+## 2. Claim → file map (all under `results/final/`)
 
 | paper item | script | file(s) |
 |---|---|---|
@@ -67,7 +67,7 @@ of the intervention metrics and the stress-test operators are in the paper (§3)
 ```bash
 cp env.example.sh env.sh && source env.sh       # paths: TTS_ANAL_CKPTS, TTS_ANAL_DATASETS (LibriSpeech test-clean)
 tar -xf embeddings.tar                          # from the data bundle -> results/embeddings/<tag>/<cond>.npz
-bash src/run_all_analyses.sh                    # rewrites results/paper5c17/*.csv, fig2_*.pdf, PAPER_NUMBERS2.json
+bash src/run_all_analyses.sh                    # rewrites results/final/*.csv, fig2_*.pdf, PAPER_NUMBERS2.json
 ```
 
 **Full pipeline** (generation → QC → interventions → perturbations → decoder-only → ASR → embeddings):
@@ -91,7 +91,7 @@ ab720c3e736880f707e5442492e5759d9499d53de914fe46285a0291590a27cd  audio_generate
 0617b935972bc586ff7912ffe191991e86360beeb60a1630c8a74abeb58c1d2e  audio_perturbed.tar  (4.45 GB)
 3d687c43d2f77ea5b15377a98636aa88743dd300eeac99f4702ead6ff5501c92  audio_subsets.tar  (0.31 GB)
 896b50e48ff746cdc748fa47f4d077f7dc7a6f5d85800adc14c890404e3769f2  embeddings.tar  (8.57 GB)
-d8840861b77e44fca06f7c8eb5478ade101da0fc7dc40ae37b5ee3877c22d9cf  manifests_and_results.tar  (5.3 MB)
+b9c8c1c42d8449e21fc2ff6f94761ed234ecbbda9e388a08dbc845d3fd35f54a  manifests_and_results.tar  (5.3 MB)
 ```
 
 `sha256sum -c SHA256SUMS`; `tar -xf <archive>.tar` from this directory. LibriSpeech/VCTK originals are not

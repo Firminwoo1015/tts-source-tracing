@@ -26,7 +26,7 @@ import pandas as pd
 from sklearn.preprocessing import normalize
 
 ROOT = Path(os.environ.get("TTS_ANAL_ROOT", Path(__file__).resolve().parents[1]))
-RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/paper5c17")
+RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/final")
 SYSTEMS = os.environ.get("TTS_ANAL_SYSTEMS", "f5tts,xtts,cosyvoice3,chatterbox,indextts").split(",")
 REFS = ["real"] + SYSTEMS
 TARGET = {"resynth_vocos": "f5tts", "resynth_hift": "cosyvoice2",

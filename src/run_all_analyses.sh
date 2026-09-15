@@ -1,11 +1,11 @@
 #!/bin/bash
 # Reproduces every table, figure and quoted number of the paper from the released embeddings
 # (results/embeddings/<tag>/<cond>.npz, see README "Data bundle"). CPU only, conda env `tts_anal`.
-# Writes results/paper5c17/*.csv, fig2_*.pdf and PAPER_NUMBERS2.json (the claim-to-file map is in README).
+# Writes results/final/*.csv, fig2_*.pdf and PAPER_NUMBERS2.json (the claim-to-file map is in README).
 set -e
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 export TTS_ANAL_SYSTEMS="f5tts,xtts,cosyvoice3,chatterbox,indextts"
-export TTS_ANAL_RESULTS="results/paper5c17"
+export TTS_ANAL_RESULTS="results/final"
 export TTS_ANAL_EXCLUDE="data/manifests/exclude17.txt"
 L="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
 for ssl in wavlm hubert xlsr w2v2lv60 w2vbert; do python src/analyze_cloning.py --ssl $ssl; done   # Table 1, per-class recall
@@ -33,4 +33,4 @@ if [ -f results/embeddings/wavlm_tn/resynth_vocos.npz ]; then
 fi
 python src/analyze_seeds2.py                                    # §4.1 controlled-seed study
 python src/plot_figures2.py                                     # fig2_intervention, fig2_interv_layers
-python src/paper_numbers.py results/paper5c17                   # PAPER_NUMBERS2.json (every quoted number)
+python src/paper_numbers.py results/final                   # PAPER_NUMBERS2.json (every quoted number)

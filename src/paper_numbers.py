@@ -1,5 +1,5 @@
 """Collect manuscript numbers (v14 layout: S_t / T / G / G_adj, A1/A2/B3/D/N) from a results dir.
-usage: python src/paper_numbers.py results/paper5c17   -> <dir>/PAPER_NUMBERS2.json + table rows printed
+usage: python src/paper_numbers.py results/final   -> <dir>/PAPER_NUMBERS2.json + table rows printed
 """
 import sys, json, glob
 from pathlib import Path

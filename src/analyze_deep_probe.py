@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from analyze_bands import load_all, SSLS, BANDS
 
 ROOT = Path(os.environ.get("TTS_ANAL_ROOT", Path(__file__).resolve().parents[1]))
-RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/paper5c17")
+RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/final")
 RNG = np.random.default_rng(0)
 CGRID = [0.1, 1.0, 10.0]
 

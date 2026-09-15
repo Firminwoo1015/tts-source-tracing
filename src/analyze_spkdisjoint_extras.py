@@ -20,7 +20,7 @@ from analyze_cloning import nested_spk_disjoint, load_all as load_cloning, CLONI
 from analyze_bands import band_pred, load_all as load_tts, SSLS
 
 ROOT = Path(os.environ.get("TTS_ANAL_ROOT", Path(__file__).resolve().parents[1]))
-RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/paper5c17")
+RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/final")
 EXCLUDE = set((ROOT / os.environ.get("TTS_ANAL_EXCLUDE", "data/manifests/exclude17.txt")).read_text().split())
 CONDS = ["real"] + CLONING
 RNG = np.random.default_rng(0)

@@ -11,7 +11,7 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(os.environ.get("TTS_ANAL_ROOT", Path(__file__).resolve().parents[1]))
-RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/paper5c17")
+RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/final")
 CKPTS = Path(os.environ.get("TTS_ANAL_CKPTS", ROOT / "ckpts"))
 SYSTEMS = os.environ.get("TTS_ANAL_SYSTEMS", "f5tts,xtts,cosyvoice3,chatterbox,indextts").split(",")
 CONDS = ["real"] + SYSTEMS

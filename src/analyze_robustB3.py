@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from analyze_cloning import load_all, CLONING
 
 ROOT = Path(os.environ.get("TTS_ANAL_ROOT", Path(__file__).resolve().parents[1]))
-RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/paper5c17")
+RESULTS = os.environ.get("TTS_ANAL_RESULTS", "results/final")
 RNG = np.random.default_rng(0)
 CONDS = ["real"] + CLONING
 STOCH = {"noise20", "phaserand"}
