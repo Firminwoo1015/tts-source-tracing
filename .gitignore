@@ -50,7 +50,9 @@
 !/results/paper5c17/cloning_ttsonly_perclass_wavlm.csv
 !/results/paper5c17/deconly_wavlm.csv
 !/results/paper5c17/deep_probe.csv
+!/results/paper5c17/fig2_knn_mechanism.pdf
 !/results/paper5c17/fig2_intervention.pdf
+!/results/paper5c17/fig2_knn_mechanism.png
 !/results/paper5c17/fig2_intervention.png
 !/results/paper5c17/fig2_interv_layers.pdf
 !/results/paper5c17/fig2_interv_layers.png
