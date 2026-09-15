@@ -92,7 +92,8 @@ def fig_layerwise():
 
 def fig_intervention(height_inches=2.53):
     """Fig. 1: four panels on shared probe rows at WavLM L0. (a) per-class prediction-rate shift
-    heatmap vs clean real; (b) signed target margin S_t; (c) translation T_t; (d) relative
+    heatmap vs clean real; (b) signed target margin S_t; (c) target-distance reduction T_t,
+    titled "Distance reduction" for width; (d) relative
     alignment G_t, each with 95% speaker-bootstrap CIs. Off-target controls (EnCodec, DAC, BigVGAN)
     are scored under the F5-TTS (hollow circle) and CosyVoice3 (hollow square) targets."""
     from matplotlib.colors import LinearSegmentedColormap, Normalize
@@ -115,13 +116,17 @@ def fig_intervention(height_inches=2.53):
     fig = plt.figure(figsize=(FULL, height_inches))
     W, H = FULL * 72, height_inches * 72
     bottom, height = 61, H - 90.4          # room below for the colorbar, above for a 2-line title
-    specs = [(111, 139), (265, 66), (349, 64), (433, 67)]        # x0 and width in points
+    # x0 and width in points. The heatmap sits 14 pt further left than before, using the
+    # slack the row labels left at the canvas edge, so the three metric panels can spread
+    # far enough apart for one-line titles. At 9 pt the titles overhang their 66-68 pt
+    # panels, so the centres, not the panels, set the spacing.
+    specs = [(97, 139), (253, 66), (344, 68), (436, 66)]
     axes = [fig.add_axes([x / W, bottom / H, w / W, height / H]) for x, w in specs]
     a, b, c, d = axes
     # (b) is shortened so the two-line (c) title clears it: at 9 pt the panels are only
     # 64-67 pt wide, so a one-line "Target-distance reduction" would overlap its neighbours
     for ax, title in zip(axes, [r"(a) $\Delta P$(class)", "(b) Margin",
-                                "(c) Target-distance\nreduction", "(d) Alignment"]):
+                                "(c) Distance reduction", "(d) Alignment"]):
         ax.set_ylim(n - .5, -.5); ax.set_yticks([]); style_axis(ax)
         ax.set_title(title, pad=4, fontsize=9, color=INK)
         for y in range(0, n, 2):
@@ -136,7 +141,7 @@ def fig_intervention(height_inches=2.53):
     im = a.imshow(vals, cmap=cmap, norm=norm, aspect="auto", interpolation="none", zorder=2)
     # the heatmap encodes a prediction-rate shift centred on zero, not a posterior probability.
     # The bar gets its own axes so the four panels keep the shared row height they are aligned on.
-    cax = fig.add_axes([(111 + 24) / W, 26 / H, (139 - 24) / W, 4.5 / H])
+    cax = fig.add_axes([(specs[0][0] + 24) / W, 26 / H, (specs[0][1] - 24) / W, 4.5 / H])
     cb = fig.colorbar(im, cax=cax, orientation="horizontal", ticks=[-.7, 0, .7])
     cb.ax.set_xticklabels(["-.7", "0", ".7"], fontsize=9)
     cb.ax.tick_params(length=2, width=.55, pad=1, colors=INK)
