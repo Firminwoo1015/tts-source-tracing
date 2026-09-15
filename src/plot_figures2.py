@@ -90,7 +90,7 @@ def fig_layerwise():
     save(fig, "fig2_layerwise")
 
 
-def fig_intervention(height_inches=2.25):
+def fig_intervention(height_inches=2.53):
     """Fig. 1: four panels on shared probe rows at WavLM L0. (a) per-class prediction-rate shift
     heatmap vs clean real; (b) signed target margin S_t; (c) translation T_t; (d) relative
     alignment G_t, each with 95% speaker-bootstrap CIs. Off-target controls (EnCodec, DAC, BigVGAN)
@@ -114,14 +114,16 @@ def fig_intervention(height_inches=2.25):
     n = len(rows)
     fig = plt.figure(figsize=(FULL, height_inches))
     W, H = FULL * 72, height_inches * 72
-    bottom, height = 47, H - 70.4
+    bottom, height = 61, H - 90.4          # room below for the colorbar, above for a 2-line title
     specs = [(111, 139), (265, 66), (349, 64), (433, 67)]        # x0 and width in points
     axes = [fig.add_axes([x / W, bottom / H, w / W, height / H]) for x, w in specs]
     a, b, c, d = axes
-    for ax, title in zip(axes, [r"(a) $\Delta P$(class)", "(b) Target margin",
-                                "(c) Toward target", "(d) Alignment"]):
+    # (b) is shortened so the two-line (c) title clears it: at 9 pt the panels are only
+    # 64-67 pt wide, so a one-line "Target-distance reduction" would overlap its neighbours
+    for ax, title in zip(axes, [r"(a) $\Delta P$(class)", "(b) Margin",
+                                "(c) Target-distance\nreduction", "(d) Alignment"]):
         ax.set_ylim(n - .5, -.5); ax.set_yticks([]); style_axis(ax)
-        ax.set_title(title, pad=9, fontsize=9, color=INK)
+        ax.set_title(title, pad=4, fontsize=9, color=INK)
         for y in range(0, n, 2):
             ax.axhspan(y - .5, y + .5, color="#F4F7F9", zorder=0)
         for y in [2.5, 4.5, 5.5]:                                   # F5 / C3 / Index / control groups
@@ -131,7 +133,14 @@ def fig_intervention(height_inches=2.25):
     vals = np.array([[d0.loc[p, f"dP_{cl}"] for cl in classes] for p, _, _ in rows])
     cmap = LinearSegmentedColormap.from_list("shifts", ["#267CA1", "#FAFBFC", "#D38A7E"])
     norm = Normalize(-.7, .7)
-    a.imshow(vals, cmap=cmap, norm=norm, aspect="auto", interpolation="none", zorder=2)
+    im = a.imshow(vals, cmap=cmap, norm=norm, aspect="auto", interpolation="none", zorder=2)
+    # the heatmap encodes a prediction-rate shift centred on zero, not a posterior probability.
+    # The bar gets its own axes so the four panels keep the shared row height they are aligned on.
+    cax = fig.add_axes([(111 + 24) / W, 26 / H, (139 - 24) / W, 4.5 / H])
+    cb = fig.colorbar(im, cax=cax, orientation="horizontal", ticks=[-.7, 0, .7])
+    cb.ax.set_xticklabels(["-.7", "0", ".7"], fontsize=9)
+    cb.ax.tick_params(length=2, width=.55, pad=1, colors=INK)
+    cb.outline.set_linewidth(.55); cb.outline.set_edgecolor(GRAY)
     a.set_xticks(np.arange(len(classes)), [CL2.get(cl, cl) for cl in classes], rotation=30, ha="right",
                  rotation_mode="anchor")
     a.set_yticks(np.arange(n), [l for _, l, _ in rows])
@@ -268,6 +277,14 @@ def fig_interv_layers():
             sub = df[df.probe.eq(p)].sort_values("layer")
             line, = ax.plot(sub.layer, sub.delta_target, color=PALETTE[p], marker=MARKERS[p], markevery=4,
                             ms=3, lw=1.35, ls="--" if p == "resynth_glvocos" else "-", label=label)
+            # CI at the L19 residual the text interprets, on every plotted curve and not only
+            # the ones whose interval excludes zero
+            r19 = sub[sub.layer == 19]
+            if len(r19):
+                r19 = r19.iloc[0]
+                ax.errorbar(19, r19.delta_target, color=PALETTE[p], lw=0, elinewidth=.9,
+                            capsize=1.8, capthick=.7, zorder=5,
+                            yerr=[[r19.delta_target - r19.delta_ci_lo], [r19.delta_ci_hi - r19.delta_target]])
             if ssl == "wavlm":
                 handles.append(line)
     axes[0].set_ylabel(r"Target shift $\Delta P_t$", labelpad=5)
