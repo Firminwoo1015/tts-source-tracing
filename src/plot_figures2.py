@@ -252,7 +252,11 @@ def fig_retention():
 
 def fig_interv_layers():
     """Fig. 2: layer-wise Delta P to the hypothesized target for the architecture-matched probes and
-    the mel-only Griffin-Lim probe (same colors and markers as Fig. 1)."""
+    the mel-only Griffin-Lim probe (same colors and markers as Fig. 1).
+
+    Point estimates only, by choice: this figure carries the depth trend, and at L19 several
+    curves sit near zero where small error bars add more clutter than information. The L19 CI
+    judgement stays in the text and the per-layer CIs are in the released results."""
     matched = [("resynth_vocos", "Vocos → F5"), ("resynth_glvocos", "GL (Vocos) → F5")]
     if "cosyvoice3" in SYSTEMS:
         matched += [("resynth_hift3", "HiFT → C3"), ("resynth_s3vc3", "Token RT → C3")]
@@ -277,14 +281,6 @@ def fig_interv_layers():
             sub = df[df.probe.eq(p)].sort_values("layer")
             line, = ax.plot(sub.layer, sub.delta_target, color=PALETTE[p], marker=MARKERS[p], markevery=4,
                             ms=3, lw=1.35, ls="--" if p == "resynth_glvocos" else "-", label=label)
-            # CI at the L19 residual the text interprets, on every plotted curve and not only
-            # the ones whose interval excludes zero
-            r19 = sub[sub.layer == 19]
-            if len(r19):
-                r19 = r19.iloc[0]
-                ax.errorbar(19, r19.delta_target, color=PALETTE[p], lw=0, elinewidth=.9,
-                            capsize=1.8, capthick=.7, zorder=5,
-                            yerr=[[r19.delta_target - r19.delta_ci_lo], [r19.delta_ci_hi - r19.delta_target]])
             if ssl == "wavlm":
                 handles.append(line)
     axes[0].set_ylabel(r"Target shift $\Delta P_t$", labelpad=5)
