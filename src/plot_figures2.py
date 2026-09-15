@@ -273,7 +273,7 @@ def fig_interv_layers():
     axes[0].set_ylabel(r"Target shift $\Delta P_t$", labelpad=5)
     axes[1].tick_params(labelleft=False)
     fig.legend(handles=handles, loc="upper center", bbox_to_anchor=(.56, 1), ncol=2, frameon=False,
-               handlelength=1.4, handletextpad=.35, columnspacing=1.0, borderaxespad=0, labelspacing=.3)
+               handlelength=2.1, handletextpad=.35, columnspacing=.8, borderaxespad=0, labelspacing=.3)
     assert_inside(fig, "fig2_interv_layers")
     save(fig, "fig2_interv_layers")
 
