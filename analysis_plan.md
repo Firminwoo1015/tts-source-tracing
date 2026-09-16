@@ -79,7 +79,8 @@ this plan and is not covered by it.
 
 ## N2. Nuisance control on the RQ1 interventions (`analyze_transplant2.py --ssl wavlm_tn`, `analyze_centroid2.py --ssl wavlm_tn --layer 0`)
 * Added after the plan above, in response to external review. Same intervention design as C, but every
-  condition (natural-speech support set, clean real queries, resynthesized queries) is embedded from
+  condition (support set containing real speech and outputs from all five TTS systems, clean real
+  queries, resynthesized queries) is embedded from
   audio that was silence-trimmed (librosa, top_db=35) and RMS-normalized to 0.05, i.e. the tag
   `wavlm_tn`. WavLM L0, same probes, targets and bootstrap as the raw-condition run.
 * Rule: report the effect as convention-independent only if every matched path keeps ΔP_t above zero;
