@@ -62,8 +62,11 @@ this plan and is not covered by it.
   same-system cross-seed distance vs cross-system same-utterance distance.
 * Rule: "robust to generation stochasticity" if original→seed macro-F1 is within 0.05 of
   original→original and the distance ratio is clearly below one; otherwise the limitation is quantified.
-* **Outcome:** no two seeds gave identical waveforms; macro-F1 change −0.05 to +0.03 with no decrease
-  whose CI excludes zero; distance ratio 0.20–0.40 → rule satisfied.
+* **Outcome:** no two seeds gave identical waveforms. Macro-F1 changes (regenerated minus original)
+  range from −0.0320 to +0.0532 (−0.03 to +0.05 at paper precision), with no decrease whose CI
+  excludes zero. Distance ratios are 0.20–0.40. The largest increase slightly exceeds the stated 0.05
+  bound, so the rule is not strictly satisfied for every tested seed. The paper reports the observed
+  sensitivity without claiming equivalence.
 
 ## N. Nuisance control (`analyze_normalization_control.py` → `normalization_control.csv`)
 * Embeddings re-extracted after silence trimming (librosa, top_db=35) and per-utterance RMS normalization
@@ -81,11 +84,13 @@ this plan and is not covered by it.
   `wavlm_tn`. WavLM L0, same probes, targets and bootstrap as the raw-condition run.
 * Rule: report the effect as convention-independent only if every matched path keeps ΔP_t above zero;
   report any change in the control comparison separately rather than replacing the raw-condition numbers.
-* **Outcome:** all matched paths keep ΔP_t above zero (Vocos .49→.55, GL-Vocos .64→.73, GL-generic
-  .62→.73, HiFT .43→.38, token round trip .49→.55, BigVGAN .08→.08). The control comparison moves:
-  G_min becomes 3.8 [2.3,5.4] for Vocos (raw 1.2 [−0.002,2.5]) and 3.7 [3.2,4.3] for the token round
-  trip (raw 1.8 [1.5,2.2]), so all three matched paths exceed the strongest neural control under the
-  normalized condition while only two do in the raw condition. The paper reports both.
+* **Outcome:** all three matched paths retain positive target prediction-rate shifts after trim+RMS:
+  Vocos .49→.55, HiFT .43→.38, and the token round trip .49→.55. Their normalized G_min values are
+  3.8 [2.2,5.4], 0.6 [0.3,0.9], and 3.7 [3.1,4.3], respectively, in units of 10⁻³ (raw: 1.2 [−0.002,2.5],
+  0.9 [0.7,1.1], 1.8 [1.5,2.2]). All three normalized G_min CIs exclude zero, compared with two in the
+  raw condition. This preprocessing changes the support and centroids as well as the queries, so the gap
+  changes alone do not identify their cause. The other interventions also keep ΔP_t above zero
+  (GL-Vocos .64→.73, GL-generic .62→.73, BigVGAN .08→.08). The paper reports both conditions.
 
 ## Corrections applied after the first release of these files
 * `asr_wer.csv` had been produced with an earlier QC mask (`exclude7.txt`, 19 IDs) and so held 371 of
@@ -96,3 +101,12 @@ this plan and is not covered by it.
   under a different speaker split from the full set. It now accepts a fixed speaker→fold map and
   `analyze_asr.py` passes the released `speaker_folds.json` to both evaluations. On the full set this
   reproduces the previous split exactly, so `deepband_full` is unchanged.
+* The Outcome summaries of sections D and N2 above were corrected on 2026-09-16 against
+  `results/final/seeds2_transfer.csv` and `results/final/centroid2_wavlm_tn_L0.csv`. The seed range is
+  now stated as regenerated minus original, which reverses the sign of the `drop_vs_orig` column
+  (original minus regenerated) reported earlier, and the two normalized G_min lower bounds are rounded
+  once from the raw values 0.0022494448 and 0.0031499320 instead of twice. The D outcome no longer
+  claims that the pre-specified 0.05 bound was met, because the largest single-seed increase is
+  +0.0532. The N2 outcome now names the three matched paths (Vocos, HiFT, token round trip) separately
+  from the other interventions. The rules, the plan dates and the analysis history above are unchanged,
+  and no experiment was re-run for these edits: the paper's reported values were already correct.
