@@ -1,4 +1,4 @@
-# Where Modern Zero-Shot TTS Leaves Its Trace: Localizing Source-Tracing Cues in Self-Supervised Speech Representations
+# Where Zero-Shot TTS Leaves Its Trace: Localizing Source-Tracing Cues in Self-Supervised Speech Representations
 
 Minwoo Lee, Kyudan Jung, Jaegul Choo (KAIST AI). Manuscript under review (submitted to ICASSP 2027); please cite the preprint once available.
 
@@ -91,7 +91,7 @@ ab720c3e736880f707e5442492e5759d9499d53de914fe46285a0291590a27cd  audio_generate
 0617b935972bc586ff7912ffe191991e86360beeb60a1630c8a74abeb58c1d2e  audio_perturbed.tar  (4.45 GB)
 3d687c43d2f77ea5b15377a98636aa88743dd300eeac99f4702ead6ff5501c92  audio_subsets.tar  (0.31 GB)
 896b50e48ff746cdc748fa47f4d077f7dc7a6f5d85800adc14c890404e3769f2  embeddings.tar  (8.57 GB)
-94149e084a7dd52cdb546287bb8e19ac3031505898d9d54907c7a44644ed253a  manifests_and_results.tar  (5.3 MB)
+402f373d5a659b2412dc623ce18c0b9a423d4e7a98b99e5923c7b9b95096059d  manifests_and_results.tar  (5.3 MB)
 ```
 
 `sha256sum -c SHA256SUMS`; `tar -xf <archive>.tar` from this directory. LibriSpeech/VCTK originals are not
@@ -102,6 +102,6 @@ non-commercial research use only. See `DATA_LICENSES.md`.
 
 ```
 @unpublished{lee2026trace,
-  title={Where Modern Zero-Shot {TTS} Leaves Its Trace: Localizing Source-Tracing Cues in Self-Supervised Speech Representations},
+  title={Where Zero-Shot {TTS} Leaves Its Trace: Localizing Source-Tracing Cues in Self-Supervised Speech Representations},
   author={Lee, Minwoo and Jung, Kyudan and Choo, Jaegul}, year={2026}, note={Under review}}
 ```
