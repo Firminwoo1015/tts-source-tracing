@@ -91,7 +91,7 @@ ab720c3e736880f707e5442492e5759d9499d53de914fe46285a0291590a27cd  audio_generate
 0617b935972bc586ff7912ffe191991e86360beeb60a1630c8a74abeb58c1d2e  audio_perturbed.tar  (4.45 GB)
 3d687c43d2f77ea5b15377a98636aa88743dd300eeac99f4702ead6ff5501c92  audio_subsets.tar  (0.31 GB)
 896b50e48ff746cdc748fa47f4d077f7dc7a6f5d85800adc14c890404e3769f2  embeddings.tar  (8.57 GB)
-402f373d5a659b2412dc623ce18c0b9a423d4e7a98b99e5923c7b9b95096059d  manifests_and_results.tar  (5.3 MB)
+0237aac6306f0a15b63e832871a879cebf170da32545b8f7bb781fc9ef9faa3c  manifests_and_results.tar  (5.3 MB)
 ```
 
 `sha256sum -c SHA256SUMS`; `tar -xf <archive>.tar` from this directory. LibriSpeech/VCTK originals are not
