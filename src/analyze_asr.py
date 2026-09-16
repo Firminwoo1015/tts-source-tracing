@@ -8,7 +8,7 @@
     matches the reference (per condition sample); recompute TTS-only
     deep-band (17-21, best in-domain layer within band) LOO accuracy per
     encoder on that subset vs the full set.
-Output: results/paper/asr_summary.csv, asr_feature_baseline.csv,
+Output: results/final/asr_summary.csv, asr_feature_baseline.csv,
         asr_perfect_deepband.csv
 """
 

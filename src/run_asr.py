@@ -1,6 +1,6 @@
 """ASR control: transcribe every clean-condition utterance with
 faster-whisper large-v3 (cached) and compute word/char error statistics
-against the reference text. Output: results/paper/asr_wer.csv
+against the reference text. Output: results/final/asr_wer.csv
 """
 
 import json

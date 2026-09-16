@@ -3,7 +3,7 @@ EVERY TTS-class centroid (speaker-excluded), for matched AND unmatched probes.
 Reports absolute target shift, the target-specific CONTRAST (target shift minus
 mean shift to the other TTS centroids), shifts of unmatched controls toward
 each class, and a matched-vs-unmatched contrast with speaker bootstrap CIs.
-Output: results/paper/centroid2_<ssl>_L<layer>.csv
+Output: results/final/centroid2_<ssl>_L<layer>.csv
 """
 import argparse
 import os

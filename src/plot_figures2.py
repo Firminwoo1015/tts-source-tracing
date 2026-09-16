@@ -1,4 +1,4 @@
-"""Reviewer-hardened camera-ready figures. Output: results/paper/fig2_*.pdf|png"""
+"""Reviewer-hardened camera-ready figures. Output: results/final/fig2_*.pdf|png"""
 
 import os
 from pathlib import Path

@@ -8,7 +8,7 @@ separability between them is decoder-caused. Reports, per layer:
   - pairwise minimum separability
 Also, for each vocoder output, the speaker-excluded kNN assignment over the
 reference classes (real + TTS systems) at layers 0 and 4.
-Output: results/paper/deconly_<ssl>.csv, voc_vs_reference_<ssl>.csv
+Output: results/final/deconly_<ssl>.csv, voc_vs_reference_<ssl>.csv
 """
 
 import argparse

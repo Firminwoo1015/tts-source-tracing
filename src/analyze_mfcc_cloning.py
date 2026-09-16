@@ -1,7 +1,7 @@
 """MFCC baseline on the cloning-only set (persisted script for the paper's
 Table 2 numbers; the old mfcc_baseline.csv was the deprecated Kokoro-era
 5-way run). Speaker-disjoint GroupKFold, cosine kNN, speaker bootstrap.
-Output: results/paper/mfcc_cloning.csv
+Output: results/final/mfcc_cloning.csv
 """
 
 import json

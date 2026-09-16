@@ -3,7 +3,7 @@
 (b2) in-domain leave-one-out pairwise separability (same pairs/layers; the
      "uniquely closest pair" reading in the paper is in-domain only);
 (c) alternative deep bands (13-24, 20-24) under nested speaker-disjoint selection.
-Outputs: results/paper/common_spkdisjoint.csv, pairwise_spkdisjoint.csv,
+Outputs: results/final/common_spkdisjoint.csv, pairwise_spkdisjoint.csv,
          pairwise_indomain.csv, bands_alt.csv
 """
 import sys

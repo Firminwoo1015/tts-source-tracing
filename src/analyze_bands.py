@@ -2,7 +2,7 @@
 in-domain LOO). For each encoder and band (early 1-5, deep 17-21), TTS-only
 GroupKFold(5) with nested inner layer selection RESTRICTED to the band;
 macro-F1, speaker bootstrap CI, and paired early-minus-deep speaker CI.
-Output: results/paper/bands_spkdisjoint.csv
+Output: results/final/bands_spkdisjoint.csv
 """
 
 import os
