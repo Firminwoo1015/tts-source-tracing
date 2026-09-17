@@ -88,11 +88,11 @@ The manifests store LibriSpeech paths of the original machine; `src/relocate_man
 https://huggingface.co/datasets/firminumanu/tts-source-tracing-data (Hugging Face Dataset, gated for research use: accept the research-use terms, then `hf download firminumanu/tts-source-tracing-data --repo-type dataset --local-dir .`). The bundle covers exactly the paper's scope: the five systems, the interventions, the decoder-only vocoders, the seven perturbations (three realizations for the stochastic ones), the controlled-seed subsets, and the embeddings of those conditions. Archives and SHA-256 sums:
 
 ```
-ab720c3e736880f707e5442492e5759d9499d53de914fe46285a0291590a27cd  audio_generated.tar  (2.28 GB)
+00676eddbf983262ca87e215d1718c3edea000b4d0bae55f02a98b27276b5054  audio_generated.tar  (2.71 GB)
 0617b935972bc586ff7912ffe191991e86360beeb60a1630c8a74abeb58c1d2e  audio_perturbed.tar  (4.45 GB)
 3d687c43d2f77ea5b15377a98636aa88743dd300eeac99f4702ead6ff5501c92  audio_subsets.tar  (0.31 GB)
-896b50e48ff746cdc748fa47f4d077f7dc7a6f5d85800adc14c890404e3769f2  embeddings.tar  (8.57 GB)
-0237aac6306f0a15b63e832871a879cebf170da32545b8f7bb781fc9ef9faa3c  manifests_and_results.tar  (5.3 MB)
+dff00ac9cac00a2fd15f36143f3a765f29958a9fa3a00cff3417a6e12194456b  embeddings.tar  (8.81 GB)
+3320a5d993ea84a15ccddb17d780c8a0cac0dba8377b55e9fb0c2b4a9b3a5745  manifests_and_results.tar  (5.5 MB)
 ```
 
 `sha256sum -c SHA256SUMS`; `tar -xf <archive>.tar` from this directory. LibriSpeech/VCTK originals are not
