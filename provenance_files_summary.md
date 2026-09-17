@@ -2,7 +2,7 @@
 
 Per-file provenance records (one JSON object per released waveform, `python src/make_provenance_files.py`).
 
-Total records: 34440
+Total records: 35220
 
 | condition | files |
 |---|---|
@@ -91,6 +91,8 @@ Total records: 34440
 | resynth_bigvgan | 390 |
 | resynth_dac | 390 |
 | resynth_encodec | 390 |
+| resynth_glc3 | 390 |
+| resynth_glcb | 390 |
 | resynth_glvocos | 390 |
 | resynth_griffinlim | 390 |
 | resynth_hift3 | 390 |

@@ -41,10 +41,11 @@ LAB = {"wavlm": "WavLM-L (en)", "hubert": "HuBERT-L (en)",
 INK, GRAY, LIGHT = "#243342", "#71808B", "#E7ECF0"
 PALETTE = {"resynth_vocos": "#247BA8", "resynth_glvocos": "#C77C17", "resynth_griffinlim": "#C77C17",
            "resynth_hift3": "#258A73", "resynth_s3vc3": "#C15365", "resynth_bigvgan": "#8061A8",
-           "resynth_hiftcb": "#5E7F1F", "resynth_s3vccb": "#9C5B2E"}
+           "resynth_hiftcb": "#5E7F1F", "resynth_s3vccb": "#9C5B2E",
+           "resynth_glc3": "#C77C17", "resynth_glcb": "#C77C17"}   # all Griffin-Lim controls share one color
 MARKERS = {"resynth_vocos": "o", "resynth_glvocos": "D", "resynth_griffinlim": "D",
            "resynth_hift3": "^", "resynth_s3vc3": "s", "resynth_bigvgan": "v",
-           "resynth_hiftcb": "^", "resynth_s3vccb": "s"}
+           "resynth_hiftcb": "^", "resynth_s3vccb": "s", "resynth_glc3": "D", "resynth_glcb": "D"}
 
 
 def style_axis(ax):
@@ -93,126 +94,56 @@ def fig_layerwise():
     save(fig, "fig2_layerwise")
 
 
-def fig_intervention(height_inches=2.92):
-    """Fig. 1: four panels on shared probe rows at WavLM L0. (a) per-class prediction-rate shift
-    heatmap vs clean real; (b) signed target margin S_t; (c) target-distance reduction T_t,
-    titled "Distance reduction" for width; (d) relative
-    alignment G_t, each with 95% speaker-bootstrap CIs. Off-target controls (EnCodec, DAC, BigVGAN)
-    are scored under the F5-TTS (hollow circle), CosyVoice3 (hollow square) and Chatterbox
-    (hollow triangle) targets."""
+def fig_intervention():
+    """Fig. 1: per-class prediction-rate shift vs clean real at WavLM L0, one row per intervention,
+    single column. Each system block lists its same-mel Griffin-Lim control, its native decoder and,
+    where defined, the token round trip. Margins and centroid geometry (the former panels b-d) are in
+    the paper's decoder-swap table and Table 2, and in intervention_wavlm.csv / centroid2_wavlm_L0.csv."""
     from matplotlib.colors import LinearSegmentedColormap, Normalize
-    from matplotlib.lines import Line2D
-    from matplotlib.offsetbox import AnchoredOffsetbox, DrawingArea, HPacker, TextArea
     from matplotlib.patches import Rectangle
     df = pd.read_csv(OUT / "intervention_wavlm.csv")
     d0 = df[(df.layer == 0) & (df.probe != "clean_real")].set_index("probe")
-    geom = pd.read_csv(OUT / "centroid2_wavlm_L0.csv").set_index("probe")
-    rows = [("resynth_vocos", "Vocos → F5", "f5tts"), ("resynth_glvocos", "GL (Vocos) → F5", "f5tts"),
-            ("resynth_griffinlim", "GL (generic) → F5", "f5tts"),
-            ("resynth_hift3", "HiFT → C3", "cosyvoice3"), ("resynth_s3vc3", "Token RT → C3", "cosyvoice3"),
-            ("resynth_hiftcb", "HiFT → Chat.", "chatterbox"), ("resynth_s3vccb", "Token RT → Chat.", "chatterbox"),
-            ("resynth_bigvgan", "BigVGAN → Index", "indextts"),
-            ("resynth_encodec", "EnCodec", None), ("resynth_dac", "DAC", None)]
-    rows = [(p, l, t) for p, l, t in rows if p in d0.index and (t is None or t in SYSTEMS)]
+    blocks = [[("resynth_glvocos", "GL (F5 mel)", "f5tts"), ("resynth_vocos", "Vocos → F5", "f5tts")],
+              [("resynth_glc3", "GL (C3 mel)", "cosyvoice3"), ("resynth_hift3", "HiFT → C3", "cosyvoice3"),
+               ("resynth_s3vc3", "Token RT → C3", "cosyvoice3")],
+              [("resynth_glcb", "GL (Chat. mel)", "chatterbox"), ("resynth_hiftcb", "HiFT → Chat.", "chatterbox"),
+               ("resynth_s3vccb", "Token RT → Chat.", "chatterbox")],
+              [("resynth_bigvgan", "BigVGAN → Index", "indextts"), ("resynth_encodec", "EnCodec", None),
+               ("resynth_dac", "DAC", None)]]
     classes = ["real"] + SYSTEMS
-    CL2 = dict(CLAB); CL2.update({"cosyvoice3": "C3", "chatterbox": "Chat.", "indextts": "Index"})
-    ctrl_targets = [t for t in ["f5tts", "cosyvoice3", "chatterbox"] if t in SYSTEMS]
-    n = len(rows)
-    fig = plt.figure(figsize=(FULL, height_inches))
-    W, H = FULL * 72, height_inches * 72
-    bottom, height = 61, H - 90.4          # room below for the colorbar, above for a 2-line title
-    # x0 and width in points. The heatmap sits 14 pt further left than before, using the
-    # slack the row labels left at the canvas edge, so the three metric panels can spread
-    # far enough apart for one-line titles. At 9 pt the titles overhang their 66-68 pt
-    # panels, so the centres, not the panels, set the spacing.
-    specs = [(97, 139), (253, 66), (344, 68), (436, 66)]
-    axes = [fig.add_axes([x / W, bottom / H, w / W, height / H]) for x, w in specs]
-    a, b, c, d = axes
-    # (b) is shortened so the two-line (c) title clears it: at 9 pt the panels are only
-    # 64-67 pt wide, so a one-line "Target-distance reduction" would overlap its neighbours
-    for ax, title in zip(axes, [r"(a) $\Delta P$(class)", "(b) Margin",
-                                "(c) Distance reduction", "(d) Alignment"]):
-        ax.set_ylim(n - .5, -.5); ax.set_yticks([]); style_axis(ax)
-        ax.set_title(title, pad=4, fontsize=9, color=INK)
-        for y in range(0, n, 2):
-            ax.axhspan(y - .5, y + .5, color="#F4F7F9", zorder=0)
-        for y in [2.5, 4.5, 6.5, 7.5]:                              # F5 / C3 / Chat. / Index / control groups
-            if y < n - .5:
-                ax.axhline(y, color="#D8E0E5", lw=.6, zorder=1)
-    # ---- (a) heatmap
-    vals = np.array([[d0.loc[p, f"dP_{cl}"] for cl in classes] for p, _, _ in rows])
-    cmap = LinearSegmentedColormap.from_list("shifts", ["#267CA1", "#FAFBFC", "#D38A7E"])
-    norm = Normalize(-.7, .7)
-    im = a.imshow(vals, cmap=cmap, norm=norm, aspect="auto", interpolation="none", zorder=2)
-    # the heatmap encodes a prediction-rate shift centred on zero, not a posterior probability.
-    # The bar gets its own axes so the four panels keep the shared row height they are aligned on.
-    cax = fig.add_axes([(specs[0][0] + 24) / W, 26 / H, (specs[0][1] - 24) / W, 4.5 / H])
-    cb = fig.colorbar(im, cax=cax, orientation="horizontal", ticks=[-.7, 0, .7])
-    cb.ax.set_xticklabels(["-.7", "0", ".7"], fontsize=9)
-    cb.ax.tick_params(length=2, width=.55, pad=1, colors=INK)
+    CL2 = dict(CLAB); CL2.update({"cosyvoice3": "C3", "chatterbox": "Chat.", "indextts": "Idx."})   # 24 pt cells
+    cmap = LinearSegmentedColormap.from_list("shifts", ["#267CA1", "#FAFBFC", "#D38A7E"]); norm = Normalize(-.7, .7)
+    gap, n = .38, sum(len(b) for b in blocks)
+    total = n + gap * (len(blocks) - 1)
+    W, H = COL * 72, 183.0
+    fig = plt.figure(figsize=(COL, H / 72))
+    ax = fig.add_axes([101 / W, 39 / H, (W - 103) / W, (H - 55) / H])    # 16 pt above for the class labels
+    ax.set_xlim(-.5, len(classes) - .5); ax.set_ylim(total - .5, -.5)
+    for s in ax.spines.values(): s.set_visible(False)
+    ax.tick_params(axis="both", length=0, pad=3, colors=INK)
+    y, yt, yl, yc = 0.0, [], [], []
+    for block in blocks:
+        for p, label, t in block:
+            for jx, cl in enumerate(classes):
+                v = d0.loc[p, f"dP_{cl}"]
+                ax.add_patch(Rectangle((jx - .5, y - .5), 1, 1, facecolor=cmap(norm(v)), edgecolor="none", zorder=2))
+                if abs(v) >= .10 or cl == t:          # threshold, and always the boxed target cell
+                    ax.text(jx, y, f"{v:.2f}".replace("0.", "."), ha="center", va="center",
+                            color="white" if jx == 0 else "black", fontsize=9, zorder=4)
+            if t:
+                ax.add_patch(Rectangle((classes.index(t) - .5, y - .5), 1, 1, fill=False, lw=1.1, edgecolor=INK, zorder=5))
+            yt.append(y); yl.append(label); yc.append(PALETTE.get(p, INK)); y += 1
+        y += gap
+    ax.set_yticks(yt, yl)
+    for tick, c in zip(ax.get_yticklabels(), yc): tick.set_color(c)
+    ax.set_xticks(np.arange(len(classes)), [CL2.get(cl, cl) for cl in classes])
+    ax.xaxis.set_ticks_position("top"); ax.tick_params(axis="x", pad=2)
+    import matplotlib.cm as cm
+    cax = fig.add_axes([(101 + 18) / W, 25 / H, (W - 103 - 36) / W, 4.5 / H])
+    cb = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), cax=cax, orientation="horizontal", ticks=[-.7, 0, .7])
+    cb.ax.set_xticklabels(["-.7", "0", ".7"], fontsize=9); cb.ax.tick_params(length=2, width=.55, pad=1, colors=INK)
     cb.outline.set_linewidth(.55); cb.outline.set_edgecolor(GRAY)
-    a.set_xticks(np.arange(len(classes)), [CL2.get(cl, cl) for cl in classes], rotation=30, ha="right",
-                 rotation_mode="anchor")
-    a.set_yticks(np.arange(n), [l for _, l, _ in rows])
-    a.tick_params(axis="y", length=0, pad=7)
-    for i, (p, _, t) in enumerate(rows):
-        a.get_yticklabels()[i].set_color(PALETTE.get(p, INK))
-        tj = classes.index(t) if t else -1
-        for j, v in enumerate(vals[i]):
-            # print cells above the threshold, and always the boxed target cell so a
-            # small hypothesized-target shift (BigVGAN -> IndexTTS) is still readable
-            if abs(v) >= .10 or j == tj:
-                # compact cell text: no leading zero, plain hyphen as the minus sign;
-                # the real column is the only dark fill, so it alone carries white text
-                a.text(j, i, f"{v:.2f}".replace("0.", "."), ha="center", va="center",
-                       color="white" if j == 0 else "black", fontsize=9, zorder=4)
-        if t:
-            a.add_patch(Rectangle((classes.index(t) - .5, i - .5), 1, 1, fill=False, lw=1.1,
-                                  edgecolor=INK, zorder=5))
-    # ---- (b)-(d) aligned interval plots
-    def errorpoint(ax, value, lo, hi, y, color, marker, hollow):
-        """Symbols are drawn over the interval so hollow control shapes stay recognizable.
-        No visual minimum is imposed: an interval narrower than the marker stays hidden,
-        which the caption states. Verified: every hidden interval sits clear of zero."""
-        assert np.isfinite([value, lo, hi]).all() and lo <= value <= hi
-        ax.errorbar(value, y, xerr=[[value - lo], [hi - value]], fmt=marker, color=color, ecolor=color,
-                    elinewidth=.9, capsize=1.7, capthick=.7, ms=4.0, mew=.7,
-                    mfc="white" if hollow else color, zorder=4)
-
-    for ax in [b, c, d]:
-        ax.axvline(0, color="#7D8991", lw=.75, zorder=2)
-        ax.grid(axis="x", color="#E5EBEF", lw=.5)
-    b.set_xlim(-.52, .80); b.set_xticks([-.5, 0, .5], ["-.5", "0", ".5"])
-    c.set_xlim(-3.6, 14.5); c.set_xticks([0, 10])
-    d.set_xlim(-2.2, 15.5); d.set_xticks([0, 10])
-    b.set_xlabel(r"$S_t$", labelpad=4); c.set_xlabel(r"$T_t$ ($\times 10^{-3}$)", labelpad=4)
-    d.set_xlabel(r"$G_t$ ($\times 10^{-3}$)", labelpad=4)
-    ctrl_marker = {"f5tts": "o", "cosyvoice3": "s", "chatterbox": "^"}
-    for i, (p, _, t) in enumerate(rows):
-        evals = ([(t, 0., False)] if t else []) + (
-            [(t2, off, True) for t2, off in zip(ctrl_targets, [-.33, 0., .33])]
-            if p in ["resynth_encodec", "resynth_dac", "resynth_bigvgan"] else [])
-        for target, off, control in evals:
-            marker = ctrl_marker[target] if control else MARKERS[p]
-            color = GRAY if control else PALETTE[p]
-            r = d0.loc[p]
-            s_keys = [f"S_{target}", f"S_{target}_lo", f"S_{target}_hi"] if control else ["S_target", "S_ci_lo", "S_ci_hi"]
-            errorpoint(b, *[r[k] for k in s_keys], i + off, color, marker, control)
-            g = geom.loc[f"{p}_under_{target}" if control else p]
-            for ax, key in [(c, "T"), (d, "G")]:
-                errorpoint(ax, *[g[k] * 1e3 for k in [key, key + "_lo", key + "_hi"]], i + off, color, marker, control)
-    # ---- key: the seven hypothesized-target shapes, then the three control shapes
-    keyp = ["resynth_vocos", "resynth_glvocos", "resynth_hift3", "resynth_s3vc3", "resynth_hiftcb", "resynth_s3vccb", "resynth_bigvgan"]
-    sw = DrawingArea(11 * len(keyp) - 1, 11, 0, 0)
-    for x, p in zip([5 + 11 * k for k in range(len(keyp))], keyp):
-        sw.add_artist(Line2D([x], [5.5], color=PALETTE[p], marker=MARKERS[p], ls="none", markersize=4.0, markeredgewidth=.7))
-    groups = [HPacker(children=[sw, TextArea("Hypothesized targets", textprops={"size": 9, "color": INK})], align="center", pad=0, sep=4)]
-    for marker, label in [("o", "Control / F5"), ("s", "Control / C3"), ("^", "Control / Chat.")]:
-        s1 = DrawingArea(10, 11, 0, 0)
-        s1.add_artist(Line2D([5], [5.5], color=GRAY, marker=marker, mfc="white", ls="none", markersize=4.0, markeredgewidth=.7))
-        groups.append(HPacker(children=[s1, TextArea(label, textprops={"size": 9, "color": INK})], align="center", pad=0, sep=4))
-    fig.add_artist(AnchoredOffsetbox(loc="lower center", child=HPacker(children=groups, align="center", pad=0, sep=12),
-                                     frameon=False, bbox_to_anchor=(.57, .004), bbox_transform=fig.transFigure, borderpad=0, pad=0))
+    cb.set_label(r"$\Delta P$(class)", fontsize=9, color=INK, labelpad=1)
     assert_inside(fig, "fig2_intervention")
     save(fig, "fig2_intervention")
 
@@ -268,13 +199,13 @@ def fig_interv_layers():
     Point estimates only, by choice: this figure carries the depth trend, and at L19 several
     curves sit near zero where small error bars add more clutter than information. The L19 CI
     judgement stays in the text and the per-layer CIs are in the released results."""
-    matched = [("resynth_vocos", "Vocos → F5"), ("resynth_glvocos", "GL (Vocos) → F5")]
+    matched = [("resynth_vocos", "Vocos → F5")]      # matched paths only; the GL controls are in Fig. 1
     if "cosyvoice3" in SYSTEMS:
         matched += [("resynth_hift3", "HiFT → C3"), ("resynth_s3vc3", "Token RT → C3")]
     if "chatterbox" in SYSTEMS:
         matched += [("resynth_hiftcb", "HiFT → Chat."), ("resynth_s3vccb", "Token RT → Chat.")]
     # two legend columns, filled column-first: Vocos over the two HiFT paths, GL over the two round trips
-    legend_order = ["resynth_vocos", "resynth_hift3", "resynth_hiftcb", "resynth_glvocos", "resynth_s3vc3", "resynth_s3vccb"]
+    legend_order = ["resynth_vocos", "resynth_hift3", "resynth_hiftcb", "resynth_s3vc3", "resynth_s3vccb"]
     height_in = 2.29                       # one legend row more than the four-curve version (2.12 in)
     fig = plt.figure(figsize=(COL, height_in))
     W, H = COL * 72, height_in * 72

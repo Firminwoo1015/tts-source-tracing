@@ -42,7 +42,7 @@ TARGET = {"resynth_vocos": "f5tts", "resynth_hift": "cosyvoice2",
           "resynth_griffinlim": "f5tts", "resynth_glvocos": "f5tts",
           "resynth_encodec": None, "resynth_dac": None}
 # probes for optional newer systems (only active when the target system is in TTS_ANAL_SYSTEMS)
-_EXTRA_TARGET = {"resynth_hift3": "cosyvoice3", "resynth_s3vc3": "cosyvoice3", "resynth_qwencodec": "qwen3tts", "resynth_hiftcb": "chatterbox", "resynth_s3vccb": "chatterbox"}
+_EXTRA_TARGET = {"resynth_hift3": "cosyvoice3", "resynth_s3vc3": "cosyvoice3", "resynth_qwencodec": "qwen3tts", "resynth_hiftcb": "chatterbox", "resynth_s3vccb": "chatterbox", "resynth_glc3": "cosyvoice3", "resynth_glcb": "chatterbox"}
 TARGET.update({p: t for p, t in _EXTRA_TARGET.items() if t in SYSTEMS})
 # keep only probes whose hypothesized target is present (unmatched probes keep target None)
 TARGET = {p: t for p, t in TARGET.items() if t is None or t in SYSTEMS}
@@ -52,6 +52,9 @@ RNG = np.random.default_rng(0)
 # replicates behind every previously released CI are drawn in exactly the original order.
 ADDED_PROBES, ADDED_TARGETS = {"resynth_hiftcb", "resynth_s3vccb"}, {"chatterbox"}
 RNG_ADDED = np.random.default_rng(1)
+# same-mel Griffin-Lim decoder-swap controls (analysis_plan.md, N4) draw from a third stream
+ADDED_PROBES2 = {"resynth_glc3", "resynth_glcb"}
+RNG_ADDED2 = np.random.default_rng(2)
 
 
 def load(ssl, cond):
@@ -122,7 +125,7 @@ def main():
 
             speakers = np.unique(sp)
 
-            probe_rng = RNG_ADDED if probe in ADDED_PROBES else RNG
+            probe_rng = RNG_ADDED2 if probe in ADDED_PROBES2 else (RNG_ADDED if probe in ADDED_PROBES else RNG)
 
             def boot_stat(stat_fn, n=1000, rng=None):
                 rng = rng or probe_rng

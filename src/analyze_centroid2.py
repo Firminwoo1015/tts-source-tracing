@@ -21,7 +21,7 @@ TARGET = {"resynth_vocos": "f5tts", "resynth_hift": "cosyvoice2",
           "resynth_s3vc": "cosyvoice2", "resynth_bigvgan": "indextts",
           "resynth_glvocos": "f5tts", "resynth_griffinlim": "f5tts"}
 # probes for optional newer systems (only active when the target system is in TTS_ANAL_SYSTEMS)
-_EXTRA_TARGET = {"resynth_hift3": "cosyvoice3", "resynth_s3vc3": "cosyvoice3", "resynth_qwencodec": "qwen3tts", "resynth_hiftcb": "chatterbox", "resynth_s3vccb": "chatterbox"}
+_EXTRA_TARGET = {"resynth_hift3": "cosyvoice3", "resynth_s3vc3": "cosyvoice3", "resynth_qwencodec": "qwen3tts", "resynth_hiftcb": "chatterbox", "resynth_s3vccb": "chatterbox", "resynth_glc3": "cosyvoice3", "resynth_glcb": "chatterbox"}
 TARGET.update({p: t for p, t in _EXTRA_TARGET.items() if t in SYSTEMS})
 TARGET = {p: t for p, t in TARGET.items() if t in SYSTEMS}
 PROBES = [p for p in PROBES if p in TARGET or p in ("resynth_encodec", "resynth_dac")] + [p for p in _EXTRA_TARGET if p in TARGET]
@@ -31,6 +31,9 @@ RNG = np.random.default_rng(0)
 # replicates behind every previously released CI are drawn in exactly the original order.
 ADDED_PROBES, ADDED_TARGETS = {"resynth_hiftcb", "resynth_s3vccb"}, {"chatterbox"}
 RNG_ADDED = np.random.default_rng(1)
+# same-mel Griffin-Lim decoder-swap controls (analysis_plan.md, N4) draw from a third stream
+ADDED_PROBES2 = {"resynth_glc3", "resynth_glcb"}
+RNG_ADDED2 = np.random.default_rng(2)
 
 def load(ssl, cond, layer):
     d = np.load(ROOT / "results/embeddings" / ssl / f"{cond}.npz")
@@ -83,7 +86,7 @@ def main():
             others = [c for c in TTS if c != tgt]
             contrast = shifts[p][tgt] - np.mean([shifts[p][c] for c in others], axis=0)
             row["contrast"] = contrast.mean()
-            prng = RNG_ADDED if p in ADDED_PROBES else RNG
+            prng = RNG_ADDED2 if p in ADDED_PROBES2 else (RNG_ADDED if p in ADDED_PROBES else RNG)
             row["contrast_lo"], row["contrast_hi"] = boot(lambda s: sel(contrast, spk[p], s).mean(), rng=prng)
             # positive-is-stronger conventions used in the paper:
             #   T = -shift_target  (translation toward the target centroid)
@@ -117,7 +120,7 @@ def main():
             u = np.mean([sel(contrast_to(q, tgt), spk[q], s).mean() for q in unm])
             return m - u
         full = np.unique(spk[p])
-        prng = RNG_ADDED if p in ADDED_PROBES else RNG
+        prng = RNG_ADDED2 if p in ADDED_PROBES2 else (RNG_ADDED if p in ADDED_PROBES else RNG)
         lo, hi = boot(stat_abs, rng=prng); lo2, hi2 = boot(stat_cc, rng=prng)
         rows.append({"probe": f"{p}_vs_unmatched", "target": tgt,
                      "matched_minus_unmatched_target_shift": stat_abs(full),

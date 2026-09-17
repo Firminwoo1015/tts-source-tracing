@@ -130,6 +130,35 @@ this plan and is not covered by it.
   trim+RMS (mean absolute change 0.038) than every other condition (0.069–0.095, including real speech
   and both Chatterbox paths). It changes no reported conclusion.
 
+## N4. Same-mel Griffin–Lim decoder swap (`src/gen/resynth_gl_samemel.py`, `analyze_decoder_swap.py`)
+* Added on 2026-09-17 after N3, with the manuscript frozen beforehand. Specification fixed before any new
+  audio existed, including the commitment to report every result whatever its direction.
+* Question, within each system: with the same mel of the same real utterance held fixed, does the native
+  learned decoder add target alignment beyond a non-neural reconstruction? Pairs: Vocos vs `resynth_glvocos`
+  (existing) → f5tts, CosyVoice3 HiFT vs `resynth_glc3` → cosyvoice3, Chatterbox HiFT vs `resynth_glcb` →
+  chatterbox. The new controls compute the mel with the functions the native paths use (checked: identical
+  for CosyVoice3, within 1e-4 for Chatterbox) and invert it as `resynth_glvocos` does (filter-bank
+  pseudo-inverse, Griffin–Lim, 32 iterations), seeded per utterance and aligned to the input.
+* Primary estimand: D_G = G_t(native) − G_t(same-mel GL), paired by utterance, WavLM L0, raw, 95%
+  speaker-paired bootstrap CI from 10,000 replicates. Reading: CI above zero → the native decoder adds
+  target alignment, CI including zero → not resolved, CI below zero → the GL reconstruction gives larger
+  target alignment. Secondary: D_ΔP, D_T, the standard per-path metrics, the same under trim+RMS, and
+  descriptive token-round-trip vs GL differences.
+* Not compared, by design: GL magnitudes across systems (STFT and mel resolution differ), and GL(CosyVoice3
+  mel) vs GL(Chatterbox mel) as a system difference (closely related front ends differing mainly in fmax).
+* The new probes use a third RNG stream, and every previously released row is reproduced exactly.
+* **Outcome (×10⁻³ for G and T):** D_G is +4.0 [3.7,4.3] for CosyVoice3, +6.8 [6.4,7.2] for Chatterbox and
+  −4.0 [−5.1,−3.0] for F5-TTS, with the same signs under trim+RMS (+7.5, +9.5, −6.1, all CIs excluding
+  zero). D_ΔP is +.43 [.35,.51], +.42 [.33,.51] and −.15 [−.23,−.07]. D_T is +20.5 [18.3,22.7],
+  +24.5 [22.2,26.8] and +11.3 [10.1,12.5], so for F5-TTS only Vocos reduces the target distance although
+  GL has the larger relative alignment. The same-mel GL reconstructions of CosyVoice3 and Chatterbox are
+  not attributed to their targets (ΔP_t .00 [−.05,.05] and −.09 [−.16,−.03]).
+* **Exploratory observation, not pre-specified** (`gl_crossmel_wavlm_L0.csv`): Griffin–Lim from all four mel
+  front ends (Vocos, generic, CosyVoice3, Chatterbox) is classified as F5-TTS (shifts .62–.66), with
+  G toward F5-TTS of 13.0–13.5 and an F5-TTS distance change whose CI includes zero in every case. The
+  earlier GL → F5-TTS result is therefore read as a reconstruction-induced class bias, not a Vocos-mel
+  effect. The generic-mel GL leaves Fig. 1 and stays in the released results.
+
 ## Corrections applied after the first release of these files
 * `asr_wer.csv` had been produced with an earlier QC mask (`exclude7.txt`, 19 IDs) and so held 371 of
   the 373 paired IDs per condition. The two missing IDs (`3729-6852-0013`, `61-70970-0030`) were

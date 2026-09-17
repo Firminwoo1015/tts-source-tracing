@@ -49,6 +49,10 @@
 !/results/final/cloning_ttsonly_confusion_wavlm.csv
 !/results/final/cloning_ttsonly_perclass_wavlm.csv
 !/results/final/deconly_wavlm.csv
+!/results/final/decoder_swap_wavlm_L0.csv
+!/results/final/decoder_swap_wavlm_tn_L0.csv
+!/results/final/gl_crossmel_wavlm_L0.csv
+!/results/final/gl_crossmel_wavlm_tn_L0.csv
 !/results/final/deep_probe.csv
 !/results/final/fig2_intervention.pdf
 !/results/final/fig2_intervention.png
@@ -75,6 +79,7 @@
 !/src/analyze_centroid2.py
 !/src/analyze_cloning.py
 !/src/analyze_deconly.py
+!/src/analyze_decoder_swap.py
 !/src/analyze_deep_probe.py
 !/src/analyze_knn_mechanism.py
 !/src/analyze_lineage.py
@@ -97,6 +102,7 @@
 !/src/gen/resynth_cosy3.py
 !/src/gen/resynth_chatterbox.py
 !/src/gen/resynth_extra.py
+!/src/gen/resynth_gl_samemel.py
 !/src/gen/resynth_glvocos.py
 !/src/gen/resynth.py
 !/src/gen/xtts_gen.py
