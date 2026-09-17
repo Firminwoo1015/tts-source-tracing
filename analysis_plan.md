@@ -92,6 +92,44 @@ this plan and is not covered by it.
   changes alone do not identify their cause. The other interventions also keep ΔP_t above zero
   (GL-Vocos .64→.73, GL-generic .62→.73, BigVGAN .08→.08). The paper reports both conditions.
 
+## N3. Chatterbox matched paths (`src/gen/resynth_chatterbox.py`, `analyze_transplant2.py`, `analyze_centroid2.py`, `analyze_lineage.py`)
+* Added on 2026-09-17, after the rest of the paper was final, to test a third system whose decoder takes
+  representations that can be computed from real speech. XTTS-v2 and IndexTTS-1.5 decode latents of a
+  text-conditioned GPT and have no such entry point. The specification below was fixed before any
+  Chatterbox resynthesis existed.
+* Paths, mirroring the two CosyVoice3 paths: `resynth_hiftcb` (real speech → Chatterbox S3Gen mel
+  extractor, 24 kHz/80 mel/hop 480 → HiFTGenerator) and `resynth_s3vccb` (`ChatterboxVC`: S3TokenizerV2 →
+  flow → HiFT, conditioned on the same speaker's enrollment prompt). Checkpoint `ResembleAI/chatterbox`
+  revision 5bb1f6ee, the file that produced the Chatterbox class, watermark disabled as in
+  `chatterbox_gen.py`. Hypothesized target `chatterbox`. Same kNN, centroid, bootstrap and control set
+  as C and N2.
+* Rules: (R1) the WavLM L0 ΔP_t CI lies above zero; (R2) the G_adj CI lies above zero, with G_min reported
+  as in the paper but not required; (R3) a path is read as lineage-level rather than Chatterbox-specific
+  when its ΔP toward CosyVoice3 is at least its ΔP toward Chatterbox or its S_t CI includes zero;
+  secondary, the own-target versus sibling-system ΔP and G for the four CosyVoice3 and Chatterbox paths.
+  Every result is reported whatever its direction.
+* Integration: both analysis scripts drew all bootstrap replicates from one sequential RNG, so simply
+  adding the two paths moved CI endpoints of existing rows by Monte Carlo noise, and one reported bound
+  would have changed (token round trip normalized G_min lower bound 3.150 → 3.156, i.e. 3.1 → 3.2). The
+  added paths and the rows under the Chatterbox target therefore draw from a separate stream
+  (`RNG_ADDED`), and every previously released row of the six intervention CSVs is reproduced exactly.
+  The released `centroid2_w2vbert_L19.csv` did not match the released script before this change, in CI
+  endpoints only (point estimates identical, and the paper cites only a point estimate from it). It is
+  now regenerated from the script.
+* **Outcome:** R1 is met for both paths, ΔP_t .33 [.25,.41] (HiFT) and .32 [.24,.41] (token round trip).
+  R2 is met for both, G_adj 1.8 [1.6,2.0] and 3.1 [2.6,3.6] ×10⁻³, and G_min also excludes zero,
+  1.4 [1.2,1.6] and 2.7 [2.1,3.2] raw, 1.3 [1.0,1.6] and 3.9 [3.2,4.7] after trim+RMS. Under R3 the HiFT
+  path keeps a positive target margin, S_t .15 [.03,.25], with a .18 shift toward CosyVoice3, while the
+  token round trip does not resolve Chatterbox over CosyVoice3, S_t .10 [−.07,.27], with a .22 shift
+  toward CosyVoice3. The CosyVoice3 paths shift toward Chatterbox by only .08 and .09. The own-minus-
+  sibling G difference excludes zero for all four paths. The paper describes the HiFT path as
+  target-preferential and the token round trip's prediction-level preference over CosyVoice3 as
+  unresolved, and does not call either cue Chatterbox-specific. At WavLM L19 no Chatterbox path has a
+  ΔP_t CI above zero, and at w2v-BERT L19 the token round trip keeps .43 against .11 for the HiFT path.
+* Observation, not investigated: the CosyVoice3 token round trip's WavLM L0 embedding moves less under
+  trim+RMS (mean absolute change 0.038) than every other condition (0.069–0.095, including real speech
+  and both Chatterbox paths). It changes no reported conclusion.
+
 ## Corrections applied after the first release of these files
 * `asr_wer.csv` had been produced with an earlier QC mask (`exclude7.txt`, 19 IDs) and so held 371 of
   the 373 paired IDs per condition. The two missing IDs (`3729-6852-0013`, `61-70970-0030`) were
@@ -101,6 +139,11 @@ this plan and is not covered by it.
   under a different speaker split from the full set. It now accepts a fixed speaker→fold map and
   `analyze_asr.py` passes the released `speaker_folds.json` to both evaluations. On the full set this
   reproduces the previous split exactly, so `deepband_full` is unchanged.
+* 2026-09-17, with the Chatterbox paths of section N3: the bootstrap replicates of the added paths now
+  come from a separate RNG stream, so every previously released row of the intervention CSVs is
+  reproduced exactly. The released `centroid2_w2vbert_L19.csv` had not matched the released script in its
+  CI endpoints (point estimates identical, and the paper cites only a point estimate from that file), and
+  it is now regenerated from the script. No reported value changed.
 * The Outcome summaries of sections D and N2 above were corrected on 2026-09-16 against
   `results/final/seeds2_transfer.csv` and `results/final/centroid2_wavlm_tn_L0.csv`. The seed range is
   now stated as regenerated minus original, which reverses the sign of the `drop_vs_orig` column

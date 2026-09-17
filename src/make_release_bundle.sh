@@ -7,7 +7,7 @@ set -e
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"; OUT="${1:-$ROOT/../tts_anal_release}"
 mkdir -p "$OUT"; OUT="$(cd "$OUT" && pwd)"; cd "$ROOT"
 SYS="f5tts xtts cosyvoice3 chatterbox indextts"
-INTERV="resynth_vocos resynth_glvocos resynth_griffinlim resynth_hift3 resynth_s3vc3 resynth_bigvgan resynth_encodec resynth_dac"
+INTERV="resynth_vocos resynth_glvocos resynth_griffinlim resynth_hift3 resynth_s3vc3 resynth_hiftcb resynth_s3vccb resynth_bigvgan resynth_encodec resynth_dac"
 VOC="voc_pwg voc_melgan voc_mbmelgan voc_hifigan voc_stylemelgan"
 PERTS="common common_sym mp3_64k lp4k hp2k noise20 noise20_s2 noise20_s3 phaserand phaserand_s2 phaserand_s3"
 L="$OUT/.lists"; mkdir -p "$L"; : > "$L/gen"; : > "$L/pert"; : > "$L/seeds"; : > "$L/emb"

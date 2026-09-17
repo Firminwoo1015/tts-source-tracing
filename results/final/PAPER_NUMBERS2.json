@@ -621,7 +621,9 @@
     "f5tts_lo": NaN,
     "f5tts_hi": NaN,
     "cosyvoice3_lo": NaN,
-    "cosyvoice3_hi": NaN
+    "cosyvoice3_hi": NaN,
+    "chatterbox_lo": NaN,
+    "chatterbox_hi": NaN
    },
    "T": [
     0.0114837702733262,
@@ -663,7 +665,9 @@
     "f5tts_lo": NaN,
     "f5tts_hi": NaN,
     "cosyvoice3_lo": NaN,
-    "cosyvoice3_hi": NaN
+    "cosyvoice3_hi": NaN,
+    "chatterbox_lo": NaN,
+    "chatterbox_hi": NaN
    },
    "T": [
     0.0001813590366782,
@@ -701,7 +705,9 @@
     "f5tts_lo": NaN,
     "f5tts_hi": NaN,
     "cosyvoice3_lo": NaN,
-    "cosyvoice3_hi": NaN
+    "cosyvoice3_hi": NaN,
+    "chatterbox_lo": NaN,
+    "chatterbox_hi": NaN
    },
    "T": [
     0.0002379895215379,
@@ -739,7 +745,9 @@
     "f5tts_lo": NaN,
     "f5tts_hi": NaN,
     "cosyvoice3_lo": NaN,
-    "cosyvoice3_hi": NaN
+    "cosyvoice3_hi": NaN,
+    "chatterbox_lo": NaN,
+    "chatterbox_hi": NaN
    },
    "T": [
     0.0086168346392245,
@@ -781,7 +789,9 @@
     "f5tts_lo": NaN,
     "f5tts_hi": NaN,
     "cosyvoice3_lo": NaN,
-    "cosyvoice3_hi": NaN
+    "cosyvoice3_hi": NaN,
+    "chatterbox_lo": NaN,
+    "chatterbox_hi": NaN
    },
    "T": [
     0.0094277307431116,
@@ -823,7 +833,9 @@
     "f5tts_lo": -0.013,
     "f5tts_hi": 0.045,
     "cosyvoice3_lo": 0.278,
-    "cosyvoice3_hi": 0.436
+    "cosyvoice3_hi": 0.436,
+    "chatterbox_lo": 0.111,
+    "chatterbox_hi": 0.236
    },
    "T": [
     0.006897146995841,
@@ -1121,8 +1133,8 @@
    ],
    "G_adj": [
     0.0077867123021197,
-    0.0069528185846481,
-    0.0085894737052944
+    0.0070226081703922,
+    0.0085121634195971
    ]
   },
   "resynth_s3vc3": {
@@ -1145,8 +1157,56 @@
    ],
    "G_adj": [
     0.0169839660659552,
-    0.0156213580131636,
-    0.0182614324497096
+    0.0156418736873424,
+    0.0181935028367668
+   ]
+  },
+  "resynth_hiftcb": {
+   "dP": [
+    0.1126005361930295,
+    0.0621190971190971,
+    0.1671343946686412
+   ],
+   "S": [
+    0.0375335120643431,
+    -0.0453333333333333,
+    0.0918972261735419
+   ],
+   "top": "chatterbox",
+   "T": 0.0110682110044975,
+   "G": [
+    0.0016951633682199,
+    0.0009225530264185,
+    0.0024549323787485
+   ],
+   "G_adj": [
+    0.0116527481429059,
+    0.0110204404195167,
+    0.0122909321115337
+   ]
+  },
+  "resynth_s3vccb": {
+   "dP": [
+    0.4343163538873994,
+    0.3333333333333333,
+    0.5215141900229155
+   ],
+   "S": [
+    0.2949061662198391,
+    0.1462584948672363,
+    0.4562942528735632
+   ],
+   "top": "chatterbox",
+   "T": 0.0367038444923012,
+   "G": [
+    0.0146946981349515,
+    0.0131661615824226,
+    0.0162401431692515
+   ],
+   "G_adj": [
+    0.0246522829096374,
+    0.0233951214113948,
+    0.0258559217419708
    ]
   }
  },

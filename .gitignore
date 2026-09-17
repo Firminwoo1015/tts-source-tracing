@@ -58,6 +58,7 @@
 !/results/final/intervention_wavlm.csv
 !/results/final/intervention_wavlm_tn.csv
 !/results/final/knn_mechanism.csv
+!/results/final/lineage_wavlm_L0.csv
 !/results/final/mfcc_cloning.csv
 !/results/final/normalization_control.csv
 !/results/final/PAPER_NUMBERS2.json
@@ -76,6 +77,7 @@
 !/src/analyze_deconly.py
 !/src/analyze_deep_probe.py
 !/src/analyze_knn_mechanism.py
+!/src/analyze_lineage.py
 !/src/analyze_mfcc_cloning.py
 !/src/analyze_normalization_control.py
 !/src/analyze_robustB3.py
@@ -93,6 +95,7 @@
 !/src/gen/multiseed_gen.py
 !/src/gen/perturb.py
 !/src/gen/resynth_cosy3.py
+!/src/gen/resynth_chatterbox.py
 !/src/gen/resynth_extra.py
 !/src/gen/resynth_glvocos.py
 !/src/gen/resynth.py

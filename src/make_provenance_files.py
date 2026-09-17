@@ -68,6 +68,8 @@ RESYNTH = {
  "resynth_griffinlim": ("intervention", "real -> generic log-mel -> Griffin-Lim", "src/gen/resynth_extra.py"),
  "resynth_hift3": ("intervention", "real -> CosyVoice3 acoustic features -> causal HiFT", "src/gen/resynth_cosy3.py"),
  "resynth_s3vc3": ("intervention", "real -> speech_tokenizer_v3 tokens -> DiT flow -> HiFT (same-speaker prompt)", "src/gen/resynth_cosy3.py"),
+ "resynth_hiftcb": ("intervention", "real -> Chatterbox S3Gen mel extractor (24 kHz, 80 mel, hop 480) -> HiFTGenerator (ResembleAI/chatterbox s3gen.safetensors)", "src/gen/resynth_chatterbox.py"),
+ "resynth_s3vccb": ("intervention", "real -> Chatterbox S3TokenizerV2 tokens -> flow -> HiFT via ChatterboxVC (same-speaker prompt, watermark disabled)", "src/gen/resynth_chatterbox.py"),
  "resynth_hift": ("intervention", "real -> CosyVoice2 mel -> HiFT (comparison configuration)", "src/gen/resynth_cosy.py"),
  "resynth_s3vc": ("intervention", "real -> CosyVoice2 token round trip (comparison configuration)", "src/gen/resynth_cosy.py"),
  "resynth_bigvgan": ("intervention", "real -> BigVGAN-v2 24 kHz 100-band (nvidia/bigvgan_v2_24khz_100band_256x)", "src/gen/resynth.py"),
@@ -94,6 +96,7 @@ def manifest_fields(utt, man=MAN):
     return d
 SYS = ["f5tts", "xtts", "cosyvoice3", "chatterbox", "indextts"]
 PAPER_CONDS = set(SYS + ["resynth_vocos", "resynth_glvocos", "resynth_griffinlim", "resynth_hift3", "resynth_s3vc3",
+                         "resynth_hiftcb", "resynth_s3vccb",
                          "resynth_bigvgan", "resynth_encodec", "resynth_dac",
                          "voc_pwg", "voc_melgan", "voc_mbmelgan", "voc_hifigan", "voc_stylemelgan"])
 PAPER_PERTS = {"common", "common_sym", "mp3_64k", "lp4k", "hp2k", "noise20", "noise20_s2", "noise20_s3",

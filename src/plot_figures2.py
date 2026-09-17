@@ -36,12 +36,15 @@ LAB = {"wavlm": "WavLM-L (en)", "hubert": "HuBERT-L (en)",
        "w2vbert": "w2v-BERT 2.0 (multi)"}
 
 # Fig. 1 / Fig. 2 shared encoding: one color and marker per intervention probe,
-# gray hollow markers for the off-target controls (circle = F5 target, square = CosyVoice3 target).
+# gray hollow markers for the off-target controls (circle = F5 target, square = CosyVoice3 target,
+# triangle = Chatterbox target). Shape encodes the path type within a system (HiFT ^, token round trip s).
 INK, GRAY, LIGHT = "#243342", "#71808B", "#E7ECF0"
 PALETTE = {"resynth_vocos": "#247BA8", "resynth_glvocos": "#C77C17", "resynth_griffinlim": "#C77C17",
-           "resynth_hift3": "#258A73", "resynth_s3vc3": "#C15365", "resynth_bigvgan": "#8061A8"}
+           "resynth_hift3": "#258A73", "resynth_s3vc3": "#C15365", "resynth_bigvgan": "#8061A8",
+           "resynth_hiftcb": "#5E7F1F", "resynth_s3vccb": "#9C5B2E"}
 MARKERS = {"resynth_vocos": "o", "resynth_glvocos": "D", "resynth_griffinlim": "D",
-           "resynth_hift3": "^", "resynth_s3vc3": "s", "resynth_bigvgan": "v"}
+           "resynth_hift3": "^", "resynth_s3vc3": "s", "resynth_bigvgan": "v",
+           "resynth_hiftcb": "^", "resynth_s3vccb": "s"}
 
 
 def style_axis(ax):
@@ -90,12 +93,13 @@ def fig_layerwise():
     save(fig, "fig2_layerwise")
 
 
-def fig_intervention(height_inches=2.53):
+def fig_intervention(height_inches=2.92):
     """Fig. 1: four panels on shared probe rows at WavLM L0. (a) per-class prediction-rate shift
     heatmap vs clean real; (b) signed target margin S_t; (c) target-distance reduction T_t,
     titled "Distance reduction" for width; (d) relative
     alignment G_t, each with 95% speaker-bootstrap CIs. Off-target controls (EnCodec, DAC, BigVGAN)
-    are scored under the F5-TTS (hollow circle) and CosyVoice3 (hollow square) targets."""
+    are scored under the F5-TTS (hollow circle), CosyVoice3 (hollow square) and Chatterbox
+    (hollow triangle) targets."""
     from matplotlib.colors import LinearSegmentedColormap, Normalize
     from matplotlib.lines import Line2D
     from matplotlib.offsetbox import AnchoredOffsetbox, DrawingArea, HPacker, TextArea
@@ -106,12 +110,13 @@ def fig_intervention(height_inches=2.53):
     rows = [("resynth_vocos", "Vocos → F5", "f5tts"), ("resynth_glvocos", "GL (Vocos) → F5", "f5tts"),
             ("resynth_griffinlim", "GL (generic) → F5", "f5tts"),
             ("resynth_hift3", "HiFT → C3", "cosyvoice3"), ("resynth_s3vc3", "Token RT → C3", "cosyvoice3"),
+            ("resynth_hiftcb", "HiFT → Chat.", "chatterbox"), ("resynth_s3vccb", "Token RT → Chat.", "chatterbox"),
             ("resynth_bigvgan", "BigVGAN → Index", "indextts"),
             ("resynth_encodec", "EnCodec", None), ("resynth_dac", "DAC", None)]
     rows = [(p, l, t) for p, l, t in rows if p in d0.index and (t is None or t in SYSTEMS)]
     classes = ["real"] + SYSTEMS
     CL2 = dict(CLAB); CL2.update({"cosyvoice3": "C3", "chatterbox": "Chat.", "indextts": "Index"})
-    ctrl_targets = [t for t in ["f5tts", "cosyvoice3"] if t in SYSTEMS]
+    ctrl_targets = [t for t in ["f5tts", "cosyvoice3", "chatterbox"] if t in SYSTEMS]
     n = len(rows)
     fig = plt.figure(figsize=(FULL, height_inches))
     W, H = FULL * 72, height_inches * 72
@@ -131,7 +136,7 @@ def fig_intervention(height_inches=2.53):
         ax.set_title(title, pad=4, fontsize=9, color=INK)
         for y in range(0, n, 2):
             ax.axhspan(y - .5, y + .5, color="#F4F7F9", zorder=0)
-        for y in [2.5, 4.5, 5.5]:                                   # F5 / C3 / Index / control groups
+        for y in [2.5, 4.5, 6.5, 7.5]:                              # F5 / C3 / Chat. / Index / control groups
             if y < n - .5:
                 ax.axhline(y, color="#D8E0E5", lw=.6, zorder=1)
     # ---- (a) heatmap
@@ -182,10 +187,10 @@ def fig_intervention(height_inches=2.53):
     d.set_xlim(-2.2, 15.5); d.set_xticks([0, 10])
     b.set_xlabel(r"$S_t$", labelpad=4); c.set_xlabel(r"$T_t$ ($\times 10^{-3}$)", labelpad=4)
     d.set_xlabel(r"$G_t$ ($\times 10^{-3}$)", labelpad=4)
-    ctrl_marker = {"f5tts": "o", "cosyvoice3": "s"}
+    ctrl_marker = {"f5tts": "o", "cosyvoice3": "s", "chatterbox": "^"}
     for i, (p, _, t) in enumerate(rows):
         evals = ([(t, 0., False)] if t else []) + (
-            [(t2, off, True) for t2, off in zip(ctrl_targets, [-.25, .25])]
+            [(t2, off, True) for t2, off in zip(ctrl_targets, [-.33, 0., .33])]
             if p in ["resynth_encodec", "resynth_dac", "resynth_bigvgan"] else [])
         for target, off, control in evals:
             marker = ctrl_marker[target] if control else MARKERS[p]
@@ -196,16 +201,17 @@ def fig_intervention(height_inches=2.53):
             g = geom.loc[f"{p}_under_{target}" if control else p]
             for ax, key in [(c, "T"), (d, "G")]:
                 errorpoint(ax, *[g[k] * 1e3 for k in [key, key + "_lo", key + "_hi"]], i + off, color, marker, control)
-    # ---- key: the five matched shapes, then the two control shapes
-    sw = DrawingArea(54, 11, 0, 0)
-    for x, p in zip([5, 16, 27, 38, 49], ["resynth_vocos", "resynth_glvocos", "resynth_hift3", "resynth_s3vc3", "resynth_bigvgan"]):
+    # ---- key: the seven hypothesized-target shapes, then the three control shapes
+    keyp = ["resynth_vocos", "resynth_glvocos", "resynth_hift3", "resynth_s3vc3", "resynth_hiftcb", "resynth_s3vccb", "resynth_bigvgan"]
+    sw = DrawingArea(11 * len(keyp) - 1, 11, 0, 0)
+    for x, p in zip([5 + 11 * k for k in range(len(keyp))], keyp):
         sw.add_artist(Line2D([x], [5.5], color=PALETTE[p], marker=MARKERS[p], ls="none", markersize=4.0, markeredgewidth=.7))
     groups = [HPacker(children=[sw, TextArea("Hypothesized targets", textprops={"size": 9, "color": INK})], align="center", pad=0, sep=4)]
-    for marker, label in [("o", "Control / F5"), ("s", "Control / C3")]:
+    for marker, label in [("o", "Control / F5"), ("s", "Control / C3"), ("^", "Control / Chat.")]:
         s1 = DrawingArea(10, 11, 0, 0)
         s1.add_artist(Line2D([5], [5.5], color=GRAY, marker=marker, mfc="white", ls="none", markersize=4.0, markeredgewidth=.7))
         groups.append(HPacker(children=[s1, TextArea(label, textprops={"size": 9, "color": INK})], align="center", pad=0, sep=4))
-    fig.add_artist(AnchoredOffsetbox(loc="lower center", child=HPacker(children=groups, align="center", pad=0, sep=16),
+    fig.add_artist(AnchoredOffsetbox(loc="lower center", child=HPacker(children=groups, align="center", pad=0, sep=12),
                                      frameon=False, bbox_to_anchor=(.57, .004), bbox_transform=fig.transFigure, borderpad=0, pad=0))
     assert_inside(fig, "fig2_intervention")
     save(fig, "fig2_intervention")
@@ -265,8 +271,13 @@ def fig_interv_layers():
     matched = [("resynth_vocos", "Vocos → F5"), ("resynth_glvocos", "GL (Vocos) → F5")]
     if "cosyvoice3" in SYSTEMS:
         matched += [("resynth_hift3", "HiFT → C3"), ("resynth_s3vc3", "Token RT → C3")]
-    fig = plt.figure(figsize=(COL, 2.12))
-    W, H = COL * 72, 2.12 * 72
+    if "chatterbox" in SYSTEMS:
+        matched += [("resynth_hiftcb", "HiFT → Chat."), ("resynth_s3vccb", "Token RT → Chat.")]
+    # two legend columns, filled column-first: Vocos over the two HiFT paths, GL over the two round trips
+    legend_order = ["resynth_vocos", "resynth_hift3", "resynth_hiftcb", "resynth_glvocos", "resynth_s3vc3", "resynth_s3vccb"]
+    height_in = 2.29                       # one legend row more than the four-curve version (2.12 in)
+    fig = plt.figure(figsize=(COL, height_in))
+    W, H = COL * 72, height_in * 72
     axes = [fig.add_axes([x / W, 31 / H, 82 / W, 78 / H]) for x in [42, 155]]
     handles = []
     for ax, ssl, title in zip(axes, ["wavlm", "w2vbert"], ["WavLM", "w2v-BERT 2.0"]):
@@ -287,9 +298,10 @@ def fig_interv_layers():
             line, = ax.plot(sub.layer, sub.delta_target, color=PALETTE[p], marker=MARKERS[p], markevery=4,
                             ms=3, lw=1.35, ls="--" if p == "resynth_glvocos" else "-", label=label)
             if ssl == "wavlm":
-                handles.append(line)
+                handles.append((p, line))
     axes[0].set_ylabel(r"Target shift $\Delta P_t$", labelpad=5)
     axes[1].tick_params(labelleft=False)
+    handles = [h for q in legend_order for p, h in handles if p == q]
     fig.legend(handles=handles, loc="upper center", bbox_to_anchor=(.56, 1), ncol=2, frameon=False,
                handlelength=2.1, handletextpad=.35, columnspacing=.8, borderaxespad=0, labelspacing=.3)
     assert_inside(fig, "fig2_interv_layers")

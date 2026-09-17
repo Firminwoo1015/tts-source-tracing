@@ -15,6 +15,10 @@ Probes and their lineage-matched targets:
   resynth_encodec    -> none       (codec used by no system here)
   resynth_dac        -> none       (codec used by no system here)
   resynth_griffinlim -> none       (mel bottleneck, no neural decoder)
+  resynth_hift3      -> cosyvoice3 (CosyVoice3 CausalHiFT, decoder-only)
+  resynth_s3vc3      -> cosyvoice3 (CosyVoice3 tokens+DiT flow+HiFT round trip)
+  resynth_hiftcb     -> chatterbox (Chatterbox HiFT, decoder-only)
+  resynth_s3vccb     -> chatterbox (Chatterbox S3 tokens+flow+HiFT round trip)
 """
 
 import argparse
@@ -38,12 +42,16 @@ TARGET = {"resynth_vocos": "f5tts", "resynth_hift": "cosyvoice2",
           "resynth_griffinlim": "f5tts", "resynth_glvocos": "f5tts",
           "resynth_encodec": None, "resynth_dac": None}
 # probes for optional newer systems (only active when the target system is in TTS_ANAL_SYSTEMS)
-_EXTRA_TARGET = {"resynth_hift3": "cosyvoice3", "resynth_s3vc3": "cosyvoice3", "resynth_qwencodec": "qwen3tts"}
+_EXTRA_TARGET = {"resynth_hift3": "cosyvoice3", "resynth_s3vc3": "cosyvoice3", "resynth_qwencodec": "qwen3tts", "resynth_hiftcb": "chatterbox", "resynth_s3vccb": "chatterbox"}
 TARGET.update({p: t for p, t in _EXTRA_TARGET.items() if t in SYSTEMS})
 # keep only probes whose hypothesized target is present (unmatched probes keep target None)
 TARGET = {p: t for p, t in TARGET.items() if t is None or t in SYSTEMS}
 EXCLUDE = set((ROOT / os.environ.get("TTS_ANAL_EXCLUDE", "data/manifests/exclude17.txt")).read_text().split())
 RNG = np.random.default_rng(0)
+# Paths added after the first release (and CIs under their target) draw from a separate stream, so the
+# replicates behind every previously released CI are drawn in exactly the original order.
+ADDED_PROBES, ADDED_TARGETS = {"resynth_hiftcb", "resynth_s3vccb"}, {"chatterbox"}
+RNG_ADDED = np.random.default_rng(1)
 
 
 def load(ssl, cond):
@@ -114,10 +122,13 @@ def main():
 
             speakers = np.unique(sp)
 
-            def boot_stat(stat_fn, n=1000):
+            probe_rng = RNG_ADDED if probe in ADDED_PROBES else RNG
+
+            def boot_stat(stat_fn, n=1000, rng=None):
+                rng = rng or probe_rng
                 vals = []
                 for _ in range(n):
-                    s = RNG.choice(speakers, len(speakers), replace=True)
+                    s = rng.choice(speakers, len(speakers), replace=True)
                     qi = np.concatenate([np.where(sp == x)[0] for x in s])
                     bi = np.concatenate([np.where(sr_ == x)[0] for x in s])
                     vals.append(stat_fn(pred[qi], base_pred[bi]))
@@ -140,11 +151,12 @@ def main():
             # speaker-bootstrap CIs for the control probes under the fixed matched-probe
             # targets (EnCodec/DAC/BigVGAN rows of Table 2 under the F5 and CosyVoice3 targets)
             if probe in ("resynth_encodec", "resynth_dac", "resynth_bigvgan"):
-                for t in [x for x in ("f5tts", "cosyvoice3") if x in SYSTEMS and x != tgt]:
+                for t in [x for x in ("f5tts", "cosyvoice3", "chatterbox") if x in SYSTEMS and x != tgt]:
+                    trng = RNG_ADDED if t in ADDED_TARGETS else probe_rng
                     row[f"dP_{t}_lo"], row[f"dP_{t}_hi"] = boot_stat(
-                        lambda p, b, t=t: (p == t).mean() - (b == t).mean())
+                        lambda p, b, t=t: (p == t).mean() - (b == t).mean(), rng=trng)
                     row[f"S_{t}_lo"], row[f"S_{t}_hi"] = boot_stat(
-                        lambda p, b, t=t: signed_margin(p, b, t))
+                        lambda p, b, t=t: signed_margin(p, b, t), rng=trng)
             if tgt:
                 row["delta_target"] = dP[f"dP_{tgt}"]
                 row["delta_ci_lo"], row["delta_ci_hi"] = boot_stat(

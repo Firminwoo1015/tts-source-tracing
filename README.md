@@ -41,6 +41,7 @@ DATA_LICENSES.md, NOTICE, LICENSE   per-source terms (corpora, models, our code 
 | Fig. 1, Table 2 (ΔP_t, S_t, T_t, G_t, G_adj and the strongest neural-control gap G_min at 10,000 replicates) | `analyze_transplant2.py`, `analyze_centroid2.py`, `plot_figures2.py` | `intervention_wavlm.csv`, `centroid2_wavlm_L0.csv` (rows `*_vs_unmatched`, `*_vs_strongest`, `<control>_under_<target>`; Griffin–Lim `T_lo/T_hi`), `fig2_intervention.pdf` |
 | §4.2 nuisance control on the interventions (trim+RMS applied to support set and queries) | `extract_embeddings.py --trim-norm --out-tag wavlm_tn`, `analyze_transplant2.py --ssl wavlm_tn`, `analyze_centroid2.py --ssl wavlm_tn --layer 0` | `intervention_wavlm_tn.csv`, `centroid2_wavlm_tn_L0.csv` |
 | Fig. 2 (layer-wise ΔP_t), §4.2 w2v-BERT L19 | `analyze_transplant2.py --ssl w2vbert`, `analyze_centroid2.py --ssl w2vbert --layer 19` | `intervention_w2vbert.csv`, `centroid2_w2vbert_L19.csv`, `fig2_interv_layers.pdf` |
+| §4.2 related lineages (CosyVoice3 and Chatterbox paths: shift and G toward own target vs sibling system) | `analyze_lineage.py` | `lineage_wavlm_L0.csv` |
 | §4.2 decoder-only control | `analyze_deconly.py` | `deconly_wavlm.csv`, `voc_vs_reference_wavlm.csv` |
 | Table 3 (early/deep bands), §4.3 L20--L24 band | `analyze_bands.py`, `analyze_spkdisjoint_extras.py` | `bands_spkdisjoint.csv`, `bands_alt.csv` |
 | §4.3 logistic / centroid / kNN deep-band probes | `analyze_deep_probe.py` | `deep_probe.csv` |
