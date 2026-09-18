@@ -127,7 +127,9 @@ def fig_intervention():
             for jx, cl in enumerate(classes):
                 v = d0.loc[p, f"dP_{cl}"]
                 ax.add_patch(Rectangle((jx - .5, y - .5), 1, 1, facecolor=cmap(norm(v)), edgecolor="none", zorder=2))
-                if abs(v) >= .10 or cl == t:          # threshold, and always the boxed target cell
+                # threshold, the boxed target cell, and the two CosyVoice3 -> Chatterbox cross-shifts
+                # (.08/.09) that the text compares with the .18/.22 in the other direction
+                if abs(v) >= .10 or cl == t or (cl == "chatterbox" and p in ("resynth_hift3", "resynth_s3vc3")):
                     ax.text(jx, y, f"{v:.2f}".replace("0.", "."), ha="center", va="center",
                             color="white" if jx == 0 else "black", fontsize=9, zorder=4)
             if t:

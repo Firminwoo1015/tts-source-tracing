@@ -51,8 +51,10 @@ out['loo_artifact']=pd.read_csv(P/'loo_artifact.csv').round(3).to_dict('records'
 out['asr_summary']=pd.read_csv(P/'asr_summary.csv').round(3).to_dict('records'); out['asr_perfect']=pd.read_csv(P/'asr_perfect_deepband.csv').round(3).to_dict('records')
 # ---------- Table 2 interventions (WavLM L0) with S_t / T / G / G_adj
 iv=pd.read_csv(P/'intervention_wavlm.csv'); iv0=iv[iv.layer==0].set_index('probe'); c2=pd.read_csv(P/'centroid2_wavlm_L0.csv').set_index('probe')
-spec=[("resynth_vocos","f5tts","Vocos$\\to$F5"),("resynth_glvocos","f5tts","GL (Vocos mel)$\\to$F5"),("resynth_griffinlim","f5tts","GL (generic)$\\to$F5"),
-      ("resynth_hift3","cosyvoice3","HiFT$\\to$C3"),("resynth_s3vc3","cosyvoice3","Token RT$\\to$C3"),("resynth_bigvgan","indextts","BigVGAN$\\to$Index")]
+spec=[("resynth_glvocos","f5tts","GL (F5 mel)"),("resynth_vocos","f5tts","Vocos$\\to$F5"),("resynth_griffinlim","f5tts","GL (generic)$\\to$F5"),
+      ("resynth_glc3","cosyvoice3","GL (C3 mel)"),("resynth_hift3","cosyvoice3","HiFT$\\to$C3"),("resynth_s3vc3","cosyvoice3","Token RT$\\to$C3"),
+      ("resynth_glcb","chatterbox","GL (Chat. mel)"),("resynth_hiftcb","chatterbox","HiFT$\\to$Chat."),("resynth_s3vccb","chatterbox","Token RT$\\to$Chat."),
+      ("resynth_bigvgan","indextts","BigVGAN$\\to$Index")]
 T2=[]; ivd={}
 def g(r,c): return None if c not in r.index or pd.isna(r[c]) else float(r[c])
 for p,tgt,lab4 in spec:
@@ -67,7 +69,7 @@ for p,tgt,lab4 in spec:
     Ga=f"{m(cc['G_adj'])} [{m(cc['G_adj_lo'])},{m(cc['G_adj_hi'])}]" if cc is not None else "--"
     T2.append(f"{lab4} & {dp} & {S} & {T} & {G} & {Ga} \\\\")
 # off-target controls under the F5 / C3 targets (CIs from the 2026-08-24 amendment)
-for tgt,tl in [("f5tts","F5"),("cosyvoice3","C3")]:
+for tgt,tl in [("f5tts","F5"),("cosyvoice3","C3"),("chatterbox","Chat.")]:
     for p,lab in [("resynth_encodec","EnCodec"),("resynth_dac","DAC"),("resynth_bigvgan","BigVGAN")]:
         if p not in iv0.index: continue
         r=iv0.loc[p]
@@ -79,7 +81,7 @@ for tgt,tl in [("f5tts","F5"),("cosyvoice3","C3")]:
         T2.append(f"{lab} (ctrl)$\\to${tl} & {dp} & {S} & {m(u['T']) if u is not None else '--'} & {m(u['G']) if u is not None else '--'} & -- \\\\")
 # strongest-control statistic G_min per matched probe
 gmin={}
-for p in ['resynth_vocos','resynth_hift3','resynth_s3vc3']:
+for p in ['resynth_vocos','resynth_hift3','resynth_s3vc3','resynth_hiftcb','resynth_s3vccb']:
     k=f"{p}_vs_strongest"
     if k in c2.index:
         u=c2.loc[k]; gmin[p]=[g(u,'G_min'),g(u,'G_min_lo'),g(u,'G_min_hi'),u.get('controls')]
@@ -96,7 +98,7 @@ if (P/'intervention_w2vbert.csv').exists():
     out['interv_L19_w2vbert']=l19
 # layer-wise dP target for matched probes (for text): best layer and L0..L5
 ivw=pd.read_csv(P/'intervention_wavlm.csv'); lw={}
-for p in ['resynth_vocos','resynth_hift3','resynth_s3vc3','resynth_griffinlim','resynth_glvocos']:
+for p in ['resynth_vocos','resynth_hift3','resynth_s3vc3','resynth_hiftcb','resynth_s3vccb']+['resynth_griffinlim','resynth_glvocos','resynth_glc3','resynth_glcb']:
     d=ivw[ivw.probe==p]; lw[p]={int(r.layer):round(float(r.delta_target),3) for _,r in d.iterrows() if not pd.isna(r.delta_target)}
 out['interv_layers_wavlm']=lw
 # ---------- decoder-only
@@ -125,7 +127,7 @@ if (P/'intervention_wavlm_tn.csv').exists() and (P/'centroid2_wavlm_tn_L0.csv').
     tn=pd.read_csv(P/'intervention_wavlm_tn.csv'); tn0=tn[tn.layer==0].set_index('probe')
     tg=pd.read_csv(P/'centroid2_wavlm_tn_L0.csv').set_index('probe')
     n2={}
-    for pr in ['resynth_vocos','resynth_hift3','resynth_s3vc3']:
+    for pr in ['resynth_vocos','resynth_hift3','resynth_s3vc3','resynth_hiftcb','resynth_s3vccb']:
         e={}
         if pr in tn0.index:
             e['dP_t']=round(float(tn0.loc[pr,'delta_target']),4)
@@ -140,6 +142,15 @@ if (P/'intervention_wavlm_tn.csv').exists() and (P/'centroid2_wavlm_tn_L0.csv').
             n2[pr]={'T_e3':round(float(tg.loc[pr,'T'])*1e3,3),
                     'T_ci_e3':[round(float(tg.loc[pr,'T_lo'])*1e3,3), round(float(tg.loc[pr,'T_hi'])*1e3,3)]}
     out['nuisance_intervention_tn']=n2
+# ---------- N3 lineage, N4 decoder swap (Table 3) and the exploratory cross-mel table
+for nm in ['lineage_wavlm_L0','decoder_swap_wavlm_L0','decoder_swap_wavlm_tn_L0','gl_crossmel_wavlm_L0']:
+    if (P/f'{nm}.csv').exists(): out[nm]=pd.read_csv(P/f'{nm}.csv').round(5).to_dict('records')
+if (P/'decoder_swap_wavlm_L0.csv').exists():
+    ds=pd.read_csv(P/'decoder_swap_wavlm_L0.csv').set_index('native'); out['T3']=[]
+    for nat,gl_,lab in [('resynth_vocos','resynth_glvocos','Vocos (F5)'),('resynth_hift3','resynth_glc3','HiFT (C3)'),('resynth_hiftcb','resynth_glcb','HiFT (Chat.)')]:
+        if nat in ds.index and nat in iv0.index and gl_ in iv0.index:
+            r=ds.loc[nat]
+            out['T3'].append(f"{lab} & {f2s(iv0.loc[nat,'delta_target'])} / {f2s(iv0.loc[gl_,'delta_target'])} & {m(c2.loc[nat,'T'])} / {m(c2.loc[gl_,'T'])} & {m(r['D_G'])} [{m(r['D_G_lo'])},{m(r['D_G_hi'])}] \\\\")
 # ---------- D
 for nm in ['seeds2_transfer','seeds2_geometry','seeds2_stochasticity']:
     if (P/f'{nm}.csv').exists(): out[nm]=pd.read_csv(P/f'{nm}.csv').round(4).to_dict('records')

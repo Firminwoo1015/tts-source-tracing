@@ -151,8 +151,9 @@ this plan and is not covered by it.
   −4.0 [−5.1,−3.0] for F5-TTS, with the same signs under trim+RMS (+7.5, +9.5, −6.1, all CIs excluding
   zero). D_ΔP is +.43 [.35,.51], +.42 [.33,.51] and −.15 [−.23,−.07]. D_T is +20.5 [18.3,22.7],
   +24.5 [22.2,26.8] and +11.3 [10.1,12.5], so for F5-TTS only Vocos reduces the target distance although
-  GL has the larger relative alignment. The same-mel GL reconstructions of CosyVoice3 and Chatterbox are
-  not attributed to their targets (ΔP_t .00 [−.05,.05] and −.09 [−.16,−.03]).
+  GL has the larger relative alignment. The same-mel GL reconstructions of CosyVoice3 and Chatterbox
+  show no statistically resolved positive target shift: ΔP_t is +.003 [−.048,.053] for CosyVoice3 (unresolved) and
+  −.09 [−.16,−.03] for Chatterbox (negative).
 * **Exploratory observation, not pre-specified** (`gl_crossmel_wavlm_L0.csv`): Griffin–Lim from all four mel
   front ends (Vocos, generic, CosyVoice3, Chatterbox) is classified as F5-TTS (shifts .62–.66), with
   G toward F5-TTS of 13.0–13.5 and an F5-TTS distance change whose CI includes zero in every case. The
