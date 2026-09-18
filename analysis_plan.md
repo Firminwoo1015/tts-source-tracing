@@ -150,8 +150,8 @@ this plan and is not covered by it.
 * **Outcome (×10⁻³ for G and T):** D_G is +4.0 [3.7,4.3] for CosyVoice3, +6.8 [6.4,7.2] for Chatterbox and
   −4.0 [−5.1,−3.0] for F5-TTS, with the same signs under trim+RMS (+7.5, +9.5, −6.1, all CIs excluding
   zero). D_ΔP is +.43 [.35,.51], +.42 [.33,.51] and −.15 [−.23,−.07]. D_T is +20.5 [18.3,22.7],
-  +24.5 [22.2,26.8] and +11.3 [10.1,12.5], so for F5-TTS only Vocos reduces the target distance although
-  GL has the larger relative alignment. The same-mel GL reconstructions of CosyVoice3 and Chatterbox
+  +24.5 [22.2,26.8] and +11.3 [10.1,12.5], so for F5-TTS only Vocos has a statistically resolved target-distance
+  reduction although GL has the larger relative alignment. The same-mel GL reconstructions of CosyVoice3 and Chatterbox
   show no statistically resolved positive target shift: ΔP_t is +.003 [−.048,.053] for CosyVoice3 (unresolved) and
   −.09 [−.16,−.03] for Chatterbox (negative).
 * **Exploratory observation, not pre-specified** (`gl_crossmel_wavlm_L0.csv`): Griffin–Lim from all four mel
