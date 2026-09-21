@@ -96,46 +96,62 @@ def fig_layerwise():
 
 def fig_intervention():
     """Fig. 1: per-class prediction-rate shift vs clean real at WavLM L0, one row per intervention,
-    single column. Each system block lists its same-mel Griffin-Lim control, its native decoder and,
-    where defined, the token round trip. Margins and centroid geometry (the former panels b-d) are in
-    the paper's decoder-swap table and Table 2, and in intervention_wavlm.csv / centroid2_wavlm_L0.csv."""
+    single column, two panels. (a) the five matched paths grouped by target system and the three
+    off-target neural controls; (b) the same-mel Griffin-Lim reconstructions that replace the three
+    native decoders. Margins and centroid geometry are in Table 2, the decoder-swap table, and
+    intervention_wavlm.csv / centroid2_wavlm_L0.csv."""
     from matplotlib.colors import LinearSegmentedColormap, Normalize
     from matplotlib.patches import Rectangle
+    from matplotlib.transforms import blended_transform_factory
     df = pd.read_csv(OUT / "intervention_wavlm.csv")
     d0 = df[(df.layer == 0) & (df.probe != "clean_real")].set_index("probe")
-    blocks = [[("resynth_glvocos", "GL (F5 mel)", "f5tts"), ("resynth_vocos", "Vocos → F5", "f5tts")],
-              [("resynth_glc3", "GL (C3 mel)", "cosyvoice3"), ("resynth_hift3", "HiFT → C3", "cosyvoice3"),
-               ("resynth_s3vc3", "Token RT → C3", "cosyvoice3")],
-              [("resynth_glcb", "GL (Chat. mel)", "chatterbox"), ("resynth_hiftcb", "HiFT → Chat.", "chatterbox"),
-               ("resynth_s3vccb", "Token RT → Chat.", "chatterbox")],
-              [("resynth_bigvgan", "BigVGAN → Index", "indextts"), ("resynth_encodec", "EnCodec", None),
-               ("resynth_dac", "DAC", None)]]
+    panels = [("(a) Matched paths and neural controls",
+               [[("resynth_vocos", "Vocos → F5", "f5tts")],
+                [("resynth_hift3", "HiFT → C3", "cosyvoice3"), ("resynth_s3vc3", "Token RT → C3", "cosyvoice3")],
+                [("resynth_hiftcb", "HiFT → Chat.", "chatterbox"), ("resynth_s3vccb", "Token RT → Chat.", "chatterbox")],
+                [("resynth_bigvgan", "BigVGAN → Index", "indextts"), ("resynth_encodec", "EnCodec", None),
+                 ("resynth_dac", "DAC", None)]]),
+              ("(b) Griffin–Lim from the same mel",
+               [[("resynth_glvocos", "GL (F5 mel)", "f5tts"), ("resynth_glc3", "GL (C3 mel)", "cosyvoice3"),
+                 ("resynth_glcb", "GL (Chat. mel)", "chatterbox")]])]
     classes = ["real"] + SYSTEMS
     CL2 = dict(CLAB); CL2.update({"cosyvoice3": "C3", "chatterbox": "Chat.", "indextts": "Idx."})   # 24 pt cells
     cmap = LinearSegmentedColormap.from_list("shifts", ["#267CA1", "#FAFBFC", "#D38A7E"]); norm = Normalize(-.7, .7)
-    gap, n = .38, sum(len(b) for b in blocks)
-    total = n + gap * (len(blocks) - 1)
-    W, H = COL * 72, 183.0
+    gap, pgap = .38, 1.5                     # between system blocks; between panels (holds the (b) title)
+    total = sum(len(b) for _, bl in panels for b in bl) \
+        + gap * sum(len(bl) - 1 for _, bl in panels) + pgap * (len(panels) - 1)
+    W, H = COL * 72, 207.0
+    top = 30                                 # (a) title line + class labels above the grid
     fig = plt.figure(figsize=(COL, H / 72))
-    ax = fig.add_axes([101 / W, 39 / H, (W - 103) / W, (H - 55) / H])    # 16 pt above for the class labels
+    ax = fig.add_axes([101 / W, 39 / H, (W - 103) / W, (H - 39 - top) / H])
     ax.set_xlim(-.5, len(classes) - .5); ax.set_ylim(total - .5, -.5)
     for s in ax.spines.values(): s.set_visible(False)
     ax.tick_params(axis="both", length=0, pad=3, colors=INK)
+    ttl = blended_transform_factory(fig.transFigure, ax.transData)
     y, yt, yl, yc = 0.0, [], [], []
-    for block in blocks:
-        for p, label, t in block:
-            for jx, cl in enumerate(classes):
-                v = d0.loc[p, f"dP_{cl}"]
-                ax.add_patch(Rectangle((jx - .5, y - .5), 1, 1, facecolor=cmap(norm(v)), edgecolor="none", zorder=2))
-                # threshold, the boxed target cell, and the two CosyVoice3 -> Chatterbox cross-shifts
-                # (.08/.09) that the text compares with the .18/.22 in the other direction
-                if abs(v) >= .10 or cl == t or (cl == "chatterbox" and p in ("resynth_hift3", "resynth_s3vc3")):
-                    ax.text(jx, y, f"{v:.2f}".replace("0.", "."), ha="center", va="center",
-                            color="white" if jx == 0 else "black", fontsize=9, zorder=4)
-            if t:
-                ax.add_patch(Rectangle((classes.index(t) - .5, y - .5), 1, 1, fill=False, lw=1.1, edgecolor=INK, zorder=5))
-            yt.append(y); yl.append(label); yc.append(PALETTE.get(p, INK)); y += 1
-        y += gap
+    for k, (title, blocks) in enumerate(panels):
+        if k == 0:
+            ax.text(2 / W, -.5, title, transform=ttl, ha="left", va="bottom", fontsize=9, color=INK,
+                    fontweight="bold", clip_on=False)
+            ax.texts[-1].set_position((2 / W, -.5 - 16 / (H - 39 - top) * total))   # above the class labels
+        else:
+            ax.text(2 / W, (last + .5 + y - .5) / 2, title, transform=ttl, ha="left", va="center",
+                    fontsize=9, color=INK, fontweight="bold", clip_on=False)   # centered in the panel gap
+        for block in blocks:
+            for p, label, t in block:
+                for jx, cl in enumerate(classes):
+                    v = d0.loc[p, f"dP_{cl}"]
+                    ax.add_patch(Rectangle((jx - .5, y - .5), 1, 1, facecolor=cmap(norm(v)), edgecolor="none", zorder=2))
+                    # threshold, the boxed target cell, and the two CosyVoice3 -> Chatterbox cross-shifts
+                    # (.08/.09) that the text compares with the .18/.22 in the other direction
+                    if abs(v) >= .10 or cl == t or (cl == "chatterbox" and p in ("resynth_hift3", "resynth_s3vc3")):
+                        ax.text(jx, y, f"{v:.2f}".replace("0.", "."), ha="center", va="center",
+                                color="white" if jx == 0 else "black", fontsize=9, zorder=4)
+                if t:
+                    ax.add_patch(Rectangle((classes.index(t) - .5, y - .5), 1, 1, fill=False, lw=1.1, edgecolor=INK, zorder=5))
+                yt.append(y); yl.append(label); yc.append(PALETTE.get(p, INK)); last = y; y += 1
+            y += gap
+        y += pgap - gap
     ax.set_yticks(yt, yl)
     for tick, c in zip(ax.get_yticklabels(), yc): tick.set_color(c)
     ax.set_xticks(np.arange(len(classes)), [CL2.get(cl, cl) for cl in classes])
@@ -208,10 +224,10 @@ def fig_interv_layers():
         matched += [("resynth_hiftcb", "HiFT → Chat."), ("resynth_s3vccb", "Token RT → Chat.")]
     # two legend columns, filled column-first: Vocos over the two HiFT paths, GL over the two round trips
     legend_order = ["resynth_vocos", "resynth_hift3", "resynth_hiftcb", "resynth_s3vc3", "resynth_s3vccb"]
-    height_in = 2.29                       # one legend row more than the four-curve version (2.12 in)
+    height_in = 2.10                       # three legend rows above two 64 pt panels
     fig = plt.figure(figsize=(COL, height_in))
     W, H = COL * 72, height_in * 72
-    axes = [fig.add_axes([x / W, 31 / H, 82 / W, 78 / H]) for x in [42, 155]]
+    axes = [fig.add_axes([x / W, 31 / H, 82 / W, 64 / H]) for x in [42, 155]]
     handles = []
     for ax, ssl, title in zip(axes, ["wavlm", "w2vbert"], ["WavLM", "w2v-BERT 2.0"]):
         df = pd.read_csv(OUT / f"intervention_{ssl}.csv")
