@@ -1,4 +1,4 @@
-# Where Zero-Shot TTS Leaves Its Trace: Localizing Source-Tracing Cues in Self-Supervised Speech Representations
+# Localizing Zero-Shot TTS Traces in Self-Supervised Speech Representations
 
 Minwoo Lee, Kyudan Jung, Jaegul Choo (KAIST AI). Manuscript under review (submitted to ICASSP 2027); please cite the preprint once available.
 
@@ -104,6 +104,6 @@ non-commercial research use only. See `DATA_LICENSES.md`.
 
 ```
 @unpublished{lee2026trace,
-  title={Where Zero-Shot {TTS} Leaves Its Trace: Localizing Source-Tracing Cues in Self-Supervised Speech Representations},
+  title={Localizing Zero-Shot {TTS} Traces in Self-Supervised Speech Representations},
   author={Lee, Minwoo and Jung, Kyudan and Choo, Jaegul}, year={2026}, note={Under review}}
 ```

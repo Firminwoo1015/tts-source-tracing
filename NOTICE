@@ -1,6 +1,5 @@
 This repository accompanies the ICASSP 2027 submission
-"Where Zero-Shot TTS Leaves Its Trace: Localizing Source-Tracing Cues in
-Self-Supervised Speech Representations".
+"Localizing Zero-Shot TTS Traces in Self-Supervised Speech Representations".
 
 Code: MIT License (see LICENSE).
 Data: see DATA_LICENSES.md. Derivatives of LibriSpeech and VCTK are redistributed under
