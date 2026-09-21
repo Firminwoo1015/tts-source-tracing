@@ -222,7 +222,7 @@ def fig_interv_layers():
         matched += [("resynth_hift3", "HiFT (C3)"), ("resynth_s3vc3", "Token RT (C3)")]
     if "chatterbox" in SYSTEMS:
         matched += [("resynth_hiftcb", "HiFT (Chat.)"), ("resynth_s3vccb", "Token RT (Chat.)")]
-    # two legend columns, filled column-first: Vocos over the two HiFT paths, GL over the two round trips
+    # two legend columns, filled column-first: Vocos over the two HiFT paths, then the two round trips
     legend_order = ["resynth_vocos", "resynth_hift3", "resynth_hiftcb", "resynth_s3vc3", "resynth_s3vccb"]
     height_in = 2.10                       # three legend rows above two 64 pt panels
     fig = plt.figure(figsize=(COL, height_in))
@@ -245,7 +245,8 @@ def fig_interv_layers():
         for p, label in matched:
             sub = df[df.probe.eq(p)].sort_values("layer")
             line, = ax.plot(sub.layer, sub.delta_target, color=PALETTE[p], marker=MARKERS[p], markevery=4,
-                            ms=3, lw=1.35, ls="--" if p == "resynth_glvocos" else "-", label=label)
+                            ms=3, lw=1.35, ls="--" if p in ("resynth_hiftcb", "resynth_s3vccb") else "-",
+                            label=label)   # Chatterbox paths dashed, so C3/Chatterbox differ beyond color
             if ssl == "wavlm":
                 handles.append((p, line))
     axes[0].set_ylabel(r"Target shift $\Delta P_t$", labelpad=5)
