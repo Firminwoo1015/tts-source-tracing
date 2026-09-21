@@ -106,10 +106,10 @@ def fig_intervention():
     df = pd.read_csv(OUT / "intervention_wavlm.csv")
     d0 = df[(df.layer == 0) & (df.probe != "clean_real")].set_index("probe")
     panels = [("(a) Matched paths and neural controls",
-               [[("resynth_vocos", "Vocos → F5", "f5tts")],
-                [("resynth_hift3", "HiFT → C3", "cosyvoice3"), ("resynth_s3vc3", "Token RT → C3", "cosyvoice3")],
-                [("resynth_hiftcb", "HiFT → Chat.", "chatterbox"), ("resynth_s3vccb", "Token RT → Chat.", "chatterbox")],
-                [("resynth_bigvgan", "BigVGAN → Index", "indextts"), ("resynth_encodec", "EnCodec", None),
+               [[("resynth_vocos", "Vocos (F5)", "f5tts")],
+                [("resynth_hift3", "HiFT (C3)", "cosyvoice3"), ("resynth_s3vc3", "Token RT (C3)", "cosyvoice3")],
+                [("resynth_hiftcb", "HiFT (Chat.)", "chatterbox"), ("resynth_s3vccb", "Token RT (Chat.)", "chatterbox")],
+                [("resynth_bigvgan", "BigVGAN (Index)", "indextts"), ("resynth_encodec", "EnCodec", None),
                  ("resynth_dac", "DAC", None)]]),
               ("(b) Griffin–Lim from the same mel",
                [[("resynth_glvocos", "GL (F5 mel)", "f5tts"), ("resynth_glc3", "GL (C3 mel)", "cosyvoice3"),
@@ -217,11 +217,11 @@ def fig_interv_layers():
     Point estimates only, by choice: this figure carries the depth trend, and at L19 several
     curves sit near zero where small error bars add more clutter than information. The L19 CI
     judgement stays in the text and the per-layer CIs are in the released results."""
-    matched = [("resynth_vocos", "Vocos → F5")]      # matched paths only; the GL controls are in Fig. 1
+    matched = [("resynth_vocos", "Vocos (F5)")]      # matched paths only; the GL controls are in Fig. 1
     if "cosyvoice3" in SYSTEMS:
-        matched += [("resynth_hift3", "HiFT → C3"), ("resynth_s3vc3", "Token RT → C3")]
+        matched += [("resynth_hift3", "HiFT (C3)"), ("resynth_s3vc3", "Token RT (C3)")]
     if "chatterbox" in SYSTEMS:
-        matched += [("resynth_hiftcb", "HiFT → Chat."), ("resynth_s3vccb", "Token RT → Chat.")]
+        matched += [("resynth_hiftcb", "HiFT (Chat.)"), ("resynth_s3vccb", "Token RT (Chat.)")]
     # two legend columns, filled column-first: Vocos over the two HiFT paths, GL over the two round trips
     legend_order = ["resynth_vocos", "resynth_hift3", "resynth_hiftcb", "resynth_s3vc3", "resynth_s3vccb"]
     height_in = 2.10                       # three legend rows above two 64 pt panels
