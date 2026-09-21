@@ -145,7 +145,9 @@ def fig_intervention():
                     # threshold, the boxed target cell, and the two CosyVoice3 -> Chatterbox cross-shifts
                     # (.08/.09) that the text compares with the .18/.22 in the other direction
                     if abs(v) >= .10 or cl == t or (cl == "chatterbox" and p in ("resynth_hift3", "resynth_s3vc3")):
-                        ax.text(jx, y, f"{v:.2f}".replace("0.", "."), ha="center", va="center",
+                        # va="center" centers the bbox including the descender, which lifts digits by
+                        # ~0.12 em; nudge down (the y axis is inverted) so the glyphs sit mid-cell
+                        ax.text(jx, y + .10, f"{v:.2f}".replace("0.", "."), ha="center", va="center",
                                 color="white" if jx == 0 else "black", fontsize=9, zorder=4)
                 if t:
                     ax.add_patch(Rectangle((classes.index(t) - .5, y - .5), 1, 1, fill=False, lw=1.1, edgecolor=INK, zorder=5))
