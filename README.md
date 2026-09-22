@@ -94,7 +94,7 @@ https://huggingface.co/datasets/firminumanu/tts-source-tracing-data (Hugging Fac
 0617b935972bc586ff7912ffe191991e86360beeb60a1630c8a74abeb58c1d2e  audio_perturbed.tar  (4.45 GB)
 3d687c43d2f77ea5b15377a98636aa88743dd300eeac99f4702ead6ff5501c92  audio_subsets.tar  (0.31 GB)
 8c42cae2fd7cb7777efaa5da32cfcf75ce9b3bd933d0e590d7d9004daf503f93  embeddings.tar  (9.05 GB)
-2600476f2e18bea0dbdf4e5e8f220f9f14444763cc1657995bfd75604baee5ec  manifests_and_results.tar  (5.7 MB)
+6711ba0b9cae8674e145966557bd910baaf68e5eac22ffe03e71bf6cb93b0ac0  manifests_and_results.tar  (6.3 MB)
 ```
 
 `sha256sum -c SHA256SUMS`; `tar -xf <archive>.tar` from this directory. LibriSpeech/VCTK originals are not
