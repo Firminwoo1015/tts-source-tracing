@@ -174,7 +174,9 @@ def main():
     pd.DataFrame(summ).to_csv(OUT / "primary_knn_sensitivity.csv", index=False)
     pd.DataFrame(perclass).to_csv(OUT / "primary_knn_sensitivity_perclass.csv", index=False)
     pd.DataFrame(conf).to_csv(OUT / "primary_knn_sensitivity_confusion.csv", index=False)
-    pd.DataFrame(qrows).to_csv(OUT / "primary_knn_sensitivity_queries.csv.gz", index=False)
+    # mtime 0 keeps the gzip header, and so the file's bytes, independent of when it is written
+    pd.DataFrame(qrows).to_csv(OUT / "primary_knn_sensitivity_queries.csv.gz", index=False,
+                               compression={"method": "gzip", "mtime": 0})
     cfg = {"k": 5, "metric": "cosine", "normalization": "L2 per layer", "tie_rule_uniform": "first class in sorted label order",
            "rule_A": "tied queries only; tied class with smallest mean cosine distance among its top-5 neighbours; exact equality -> sorted-label rule",
            "rule_B": "all queries; class weight = sum of 1/max(d_cos, 1e-6); exact equality -> sorted-label rule",
