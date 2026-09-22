@@ -1,0 +1,283 @@
+{
+ "k": 5,
+ "metric": "cosine",
+ "normalization": "L2 per layer",
+ "tie_rule_uniform": "first class in sorted label order",
+ "rule_A": "tied queries only; tied class with smallest mean cosine distance among its top-5 neighbours; exact equality -> sorted-label rule",
+ "rule_B": "all queries; class weight = sum of 1/max(d_cos, 1e-6); exact equality -> sorted-label rule",
+ "bootstrap": "1000 speaker-paired replicates, percentile 95%, rng default_rng([20260922, ssl_index, setting_index])",
+ "ci_scope": "folds and chosen layers fixed; excludes layer-selection uncertainty",
+ "status": "post hoc sensitivity analysis added 2026-09-22; not pre-specified",
+ "checks": [
+  {
+   "ssl": "wavlm",
+   "setting": "6way",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "chosen_layers_published": "[4, 4, 4, 4, 4]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.7153165053543131,
+   "macro_f1_published": 0.7153165053543131,
+   "ci": [
+    0.6822452256050984,
+    0.7505588170418329
+   ],
+   "ci_published": [
+    0.6822452256050984,
+    0.7505588170418329
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  },
+  {
+   "ssl": "wavlm",
+   "setting": "ttsonly",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    4,
+    5,
+    4,
+    5,
+    4
+   ],
+   "chosen_layers_published": "[4, 5, 4, 5, 4]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.8027137813466473,
+   "macro_f1_published": 0.8027137813466473,
+   "ci": [
+    0.7730370048787354,
+    0.8310276001636102
+   ],
+   "ci_published": [
+    0.7730370048787354,
+    0.8310276001636102
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  },
+  {
+   "ssl": "hubert",
+   "setting": "6way",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    3,
+    3,
+    2,
+    3,
+    3
+   ],
+   "chosen_layers_published": "[3, 3, 2, 3, 3]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.6901504905028776,
+   "macro_f1_published": 0.6901504905028776,
+   "ci": [
+    0.6592360825110158,
+    0.7223224825146376
+   ],
+   "ci_published": [
+    0.6592360825110158,
+    0.7223224825146376
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  },
+  {
+   "ssl": "hubert",
+   "setting": "ttsonly",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    12,
+    3,
+    6,
+    5,
+    6
+   ],
+   "chosen_layers_published": "[12, 3, 6, 5, 6]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.7417604838928986,
+   "macro_f1_published": 0.7417604838928986,
+   "ci": [
+    0.7128124853726051,
+    0.7718053591262254
+   ],
+   "ci_published": [
+    0.7128124853726051,
+    0.7718053591262254
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  },
+  {
+   "ssl": "xlsr",
+   "setting": "6way",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "chosen_layers_published": "[5, 5, 5, 5, 5]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.7264012717202869,
+   "macro_f1_published": 0.7264012717202869,
+   "ci": [
+    0.6960890366658526,
+    0.7540113702230025
+   ],
+   "ci_published": [
+    0.6960890366658526,
+    0.7540113702230025
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  },
+  {
+   "ssl": "xlsr",
+   "setting": "ttsonly",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    5,
+    5,
+    5,
+    5,
+    6
+   ],
+   "chosen_layers_published": "[5, 5, 5, 5, 6]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.7883211418624417,
+   "macro_f1_published": 0.7883211418624417,
+   "ci": [
+    0.7539203760321054,
+    0.81876713015937
+   ],
+   "ci_published": [
+    0.7539203760321054,
+    0.81876713015937
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  },
+  {
+   "ssl": "w2v2lv60",
+   "setting": "6way",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    3,
+    3,
+    2,
+    2,
+    3
+   ],
+   "chosen_layers_published": "[3, 3, 2, 2, 3]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.6852144177141929,
+   "macro_f1_published": 0.6852144177141929,
+   "ci": [
+    0.6526213254835119,
+    0.7177093075661285
+   ],
+   "ci_published": [
+    0.6526213254835119,
+    0.7177093075661285
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  },
+  {
+   "ssl": "w2v2lv60",
+   "setting": "ttsonly",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    21,
+    3,
+    19,
+    21,
+    21
+   ],
+   "chosen_layers_published": "[21, 3, 19, 21, 21]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.7442932715357404,
+   "macro_f1_published": 0.7442932715357404,
+   "ci": [
+    0.7098580229533287,
+    0.779776297374721
+   ],
+   "ci_published": [
+    0.7098580229533287,
+    0.779776297374721
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  },
+  {
+   "ssl": "w2vbert",
+   "setting": "6way",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "chosen_layers_published": "[3, 3, 3, 3, 3]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.7809918696050252,
+   "macro_f1_published": 0.7809918696050252,
+   "ci": [
+    0.7461947268503852,
+    0.8153896965636098
+   ],
+   "ci_published": [
+    0.7461947268503852,
+    0.8153896965636098
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  },
+  {
+   "ssl": "w2vbert",
+   "setting": "ttsonly",
+   "uniform_equals_sklearn_predict": true,
+   "folds_match_manifest": true,
+   "chosen_layers": [
+    3,
+    3,
+    3,
+    0,
+    19
+   ],
+   "chosen_layers_published": "[3, 3, 3, 0, 19]",
+   "chosen_layers_match": true,
+   "macro_f1": 0.8178490216392177,
+   "macro_f1_published": 0.8178490216392177,
+   "ci": [
+    0.7824379821358728,
+    0.8487168117429599
+   ],
+   "ci_published": [
+    0.7824379821358728,
+    0.8487168117429599
+   ],
+   "macro_f1_match": true,
+   "ci_match": true
+  }
+ ]
+}

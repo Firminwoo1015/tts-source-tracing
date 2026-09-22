@@ -160,6 +160,29 @@ this plan and is not covered by it.
   earlier GL → F5-TTS result is therefore read as a reconstruction-induced class bias, not a Vocos-mel
   effect. The generic-mel GL leaves Fig. 1 and stays in the released results.
 
+## N5. Primary kNN voting sensitivity (`analyze_primary_knn_sensitivity.py` → `primary_knn_sensitivity*.csv`)
+* Added on 2026-09-22 after submission-stage review. Post hoc, not pre-specified. Table 1 keeps its
+  pre-specified rule (uniform vote, ties to the first class in sorted label order).
+* Reproduction first: for the five encoders × six-way/TTS-only the script reruns the nested evaluation of
+  `analyze_cloning.py` and checks the outer folds against `speaker_folds.json`, the chosen layers, the
+  unrounded pooled macro-F1 and the speaker-bootstrap CI against `cloning_summary_{ssl}.csv`, and every
+  query's uniform-vote prediction against scikit-learn. All ten settings match exactly.
+* On the same folds, layers and top-5 neighbours: A breaks only tied uniform votes, choosing the tied class
+  whose neighbours have the smallest mean cosine distance; B applies inverse-distance voting,
+  w = 1/max(d_cos, 1e-6), to every query. Macro-F1 differences carry 1,000-replicate speaker-paired
+  bootstrap CIs with folds and layers fixed, so they exclude layer-selection uncertainty.
+* Reading, fixed before the run: keep the result as verification material if no claim changes; if A changes
+  a claim, report the tie-rule influence beside that claim; switching the primary rule would require
+  rerunning the inner layer selection.
+* **Outcome:** uniform-vote ties occur for 6.8–15.7% of queries. Neither A nor B changes an untied query,
+  both change 47–61% of the tied ones, and macro-F1 rises by .006–.031 with CIs excluding zero in 8 of 10
+  settings. w2v-BERT 2.0 stays highest in both settings, and the SSL-versus-baseline comparison is
+  unaffected (the baselines were not rerun). Chatterbox sorts first, so the uniform rule resolves every tie
+  involving Chatterbox in its favour: 61% of tied queries go to Chatterbox, against 27% under A. For WavLM
+  TTS-only, 41 of the 122 CosyVoice3 → Chatterbox assignments are ties, and that rate falls from .33 to .26
+  under A or B while CosyVoice3 stays the lowest-recall class (.61 → .63). The §4.1 sentence now gives the
+  26% beside the 33%.
+
 ## Corrections applied after the first release of these files
 * `asr_wer.csv` had been produced with an earlier QC mask (`exclude7.txt`, 19 IDs) and so held 371 of
   the 373 paired IDs per condition. The two missing IDs (`3729-6852-0013`, `61-70970-0030`) were

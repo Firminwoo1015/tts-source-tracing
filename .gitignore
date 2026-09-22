@@ -66,6 +66,11 @@
 !/results/final/mfcc_cloning.csv
 !/results/final/normalization_control.csv
 !/results/final/PAPER_NUMBERS2.json
+!/results/final/primary_knn_sensitivity.csv
+!/results/final/primary_knn_sensitivity_config.json
+!/results/final/primary_knn_sensitivity_confusion.csv
+!/results/final/primary_knn_sensitivity_perclass.csv
+!/results/final/primary_knn_sensitivity_queries.csv.gz
 !/results/final/robustB3_w2vbert.csv
 !/results/final/robustB3_wavlm.csv
 !/results/final/seeds2_geometry.csv
@@ -85,6 +90,7 @@
 !/src/analyze_lineage.py
 !/src/analyze_mfcc_cloning.py
 !/src/analyze_normalization_control.py
+!/src/analyze_primary_knn_sensitivity.py
 !/src/analyze_robustB3.py
 !/src/analyze_seeds2.py
 !/src/analyze_simplecues.py

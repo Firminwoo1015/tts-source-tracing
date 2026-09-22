@@ -9,6 +9,7 @@ export TTS_ANAL_RESULTS="results/final"
 export TTS_ANAL_EXCLUDE="data/manifests/exclude17.txt"
 L="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
 for ssl in wavlm hubert xlsr w2v2lv60 w2vbert; do python src/analyze_cloning.py --ssl $ssl; done   # Table 1, per-class recall
+python src/analyze_primary_knn_sensitivity.py                  # §4.1 tie-rule sensitivity of Table 1 (post hoc, 2026-09-22)
 python src/analyze_mfcc_cloning.py                              # Table 1 (MFCC baseline)
 python src/analyze_simplecues.py                                # Table 1 (prosodic baseline)
 python src/analyze_asr.py                                       # Table 1 (Whisper-error baseline), §4.3 WER=0 control

@@ -36,6 +36,7 @@ DATA_LICENSES.md, NOTICE, LICENSE   per-source terms (corpora, models, our code 
 | paper item | script | file(s) |
 |---|---|---|
 | Table 1 (speaker-disjoint macro-F1, 5 encoders + baselines), §4.1 per-class recall | `analyze_cloning.py`, `analyze_mfcc_cloning.py`, `analyze_simplecues.py`, `analyze_asr.py` | `cloning_summary_{ssl}.csv`, `cloning_ttsonly_{perclass,confusion}_wavlm.csv`, `mfcc_cloning.csv`, `simplecues.csv`, `asr_feature_baseline.csv` |
+| §4.1 tie-rule sensitivity of Table 1 (CosyVoice3 → Chatterbox 26% under distance tie-breaking; post hoc) | `analyze_primary_knn_sensitivity.py` | `primary_knn_sensitivity{,_perclass,_confusion}.csv`, `primary_knn_sensitivity_queries.csv.gz`, `primary_knn_sensitivity_config.json` |
 | §4.1 trim+RMS nuisance control (paired difference CIs) | `analyze_normalization_control.py` | `normalization_control.csv` |
 | §4.1 controlled-seed study | `analyze_seeds2.py` | `seeds2_{transfer,geometry,stochasticity}.csv` |
 | Fig. 1 (ΔP heatmap), Table 2 (G_adj and the strongest neural-control gap G_min at 10,000 replicates); the S_t, T_t and G_t of every path with CIs are in the CSVs | `analyze_transplant2.py`, `analyze_centroid2.py`, `plot_figures2.py` | `intervention_wavlm.csv`, `centroid2_wavlm_L0.csv` (rows `*_vs_unmatched`, `*_vs_strongest`, `<control>_under_<target>`; Griffin–Lim `T_lo/T_hi`), `fig2_intervention.pdf` |
