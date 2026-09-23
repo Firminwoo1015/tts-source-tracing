@@ -109,7 +109,6 @@ def fig_intervention():
                [[("resynth_vocos", "Vocos (F5)", "f5tts")],
                 [("resynth_hift3", "HiFT (C3)", "cosyvoice3"), ("resynth_s3vc3", "Token RT (C3)", "cosyvoice3")],
                 [("resynth_hiftcb", "HiFT (Chat.)", "chatterbox"), ("resynth_s3vccb", "Token RT (Chat.)", "chatterbox")],
-                "sep",   # hairline between the matched paths and the off-target controls
                 [("resynth_bigvgan", "BigVGAN (Index)", "indextts"), ("resynth_encodec", "EnCodec", None),
                  ("resynth_dac", "DAC", None)]]),
               ("(b) Griffin–Lim from the same mel",
@@ -119,9 +118,8 @@ def fig_intervention():
     CL2 = dict(CLAB); CL2.update({"cosyvoice3": "C3", "chatterbox": "Chat.", "indextts": "Idx."})   # 24 pt cells
     cmap = LinearSegmentedColormap.from_list("shifts", ["#267CA1", "#FAFBFC", "#D38A7E"]); norm = Normalize(-.7, .7)
     gap, pgap = .38, 1.5                     # between system blocks; between panels (holds the (b) title)
-    rows = [[b for b in bl if b != "sep"] for _, bl in panels]
-    total = sum(len(b) for bl in rows for b in bl) \
-        + gap * sum(len(bl) - 1 for bl in rows) + pgap * (len(panels) - 1)
+    total = sum(len(b) for _, bl in panels for b in bl) \
+        + gap * sum(len(bl) - 1 for _, bl in panels) + pgap * (len(panels) - 1)
     W, H = COL * 72, 207.0
     top = 30                                 # (a) title line + class labels above the grid
     fig = plt.figure(figsize=(COL, H / 72))
@@ -140,9 +138,6 @@ def fig_intervention():
             ax.text(2 / W, (last + .5 + y - .5) / 2, title, transform=ttl, ha="left", va="center",
                     fontsize=9, color=INK, fontweight="bold", clip_on=False)   # centered in the panel gap
         for block in blocks:
-            if block == "sep":
-                ax.plot([-.5, len(classes) - .5], [y - .5 - gap / 2] * 2, color=GRAY, lw=.6, zorder=6)
-                continue
             for p, label, t in block:
                 for jx, cl in enumerate(classes):
                     v = d0.loc[p, f"dP_{cl}"]
