@@ -35,21 +35,21 @@ DATA_LICENSES.md, NOTICE, LICENSE   per-source terms (corpora, models, our code 
 
 | paper item | script | file(s) |
 |---|---|---|
-| Table 1 (speaker-disjoint macro-F1, 5 encoders + baselines), §4.1 per-class recall | `analyze_cloning.py`, `analyze_mfcc_cloning.py`, `analyze_simplecues.py`, `analyze_asr.py` | `cloning_summary_{ssl}.csv`, `cloning_ttsonly_{perclass,confusion}_wavlm.csv`, `mfcc_cloning.csv`, `simplecues.csv`, `asr_feature_baseline.csv` |
-| §4.1 tie-rule sensitivity of Table 1 (CosyVoice3 → Chatterbox 26% under distance tie-breaking; post hoc) | `analyze_primary_knn_sensitivity.py` | `primary_knn_sensitivity{,_perclass,_confusion}.csv`, `primary_knn_sensitivity_queries.csv.gz`, `primary_knn_sensitivity_config.json` |
-| §4.1 trim+RMS nuisance control (paired difference CIs) | `analyze_normalization_control.py` | `normalization_control.csv` |
-| §4.1 controlled-seed study | `analyze_seeds2.py` | `seeds2_{transfer,geometry,stochasticity}.csv` |
+| Table 1 (speaker-disjoint macro-F1, 5 encoders + baselines), §4 per-class recall | `analyze_cloning.py`, `analyze_mfcc_cloning.py`, `analyze_simplecues.py`, `analyze_asr.py` | `cloning_summary_{ssl}.csv`, `cloning_ttsonly_{perclass,confusion}_wavlm.csv`, `mfcc_cloning.csv`, `simplecues.csv`, `asr_feature_baseline.csv` |
+| §4 tie-rule sensitivity of Table 1 (CosyVoice3 → Chatterbox 26% under distance tie-breaking; post hoc) | `analyze_primary_knn_sensitivity.py` | `primary_knn_sensitivity{,_perclass,_confusion}.csv`, `primary_knn_sensitivity_queries.csv.gz`, `primary_knn_sensitivity_config.json` |
+| §4 trim+RMS nuisance control (paired difference CIs) | `analyze_normalization_control.py` | `normalization_control.csv` |
+| §4 controlled-seed study | `analyze_seeds2.py` | `seeds2_{transfer,geometry,stochasticity}.csv` |
 | Fig. 1 (ΔP heatmap), Table 2 (G_adj and the strongest neural-control gap G_min at 10,000 replicates); the S_t, T_t and G_t of every path with CIs are in the CSVs | `analyze_transplant2.py`, `analyze_centroid2.py`, `plot_figures2.py` | `intervention_wavlm.csv`, `centroid2_wavlm_L0.csv` (rows `*_vs_unmatched`, `*_vs_strongest`, `<control>_under_<target>`; Griffin–Lim `T_lo/T_hi`), `fig2_intervention.pdf` |
-| §4.2 nuisance control on the interventions (trim+RMS applied to support set and queries) | `extract_embeddings.py --trim-norm --out-tag wavlm_tn`, `analyze_transplant2.py --ssl wavlm_tn`, `analyze_centroid2.py --ssl wavlm_tn --layer 0` | `intervention_wavlm_tn.csv`, `centroid2_wavlm_tn_L0.csv` |
-| Fig. 2 (layer-wise ΔP_t), §4.2 w2v-BERT L19 | `analyze_transplant2.py --ssl w2vbert`, `analyze_centroid2.py --ssl w2vbert --layer 19` | `intervention_w2vbert.csv`, `centroid2_w2vbert_L19.csv`, `fig2_interv_layers.pdf` |
-| Table 3, §4.2 same-mel decoder swap (D_G, D_ΔP, D_T) and the exploratory cross-mel Griffin–Lim table | `gen/resynth_gl_samemel.py`, `analyze_decoder_swap.py` | `decoder_swap_wavlm_L0.csv`, `decoder_swap_wavlm_tn_L0.csv`, `gl_crossmel_wavlm_L0.csv` |
-| §4.2 related lineages (CosyVoice3 and Chatterbox paths: shift and G toward own target vs sibling system) | `analyze_lineage.py` | `lineage_wavlm_L0.csv` |
-| §4.2 decoder-only control | `analyze_deconly.py` | `deconly_wavlm.csv`, `voc_vs_reference_wavlm.csv` |
+| §4.1 nuisance control on the interventions (trim+RMS applied to support set and queries) | `extract_embeddings.py --trim-norm --out-tag wavlm_tn`, `analyze_transplant2.py --ssl wavlm_tn`, `analyze_centroid2.py --ssl wavlm_tn --layer 0` | `intervention_wavlm_tn.csv`, `centroid2_wavlm_tn_L0.csv` |
+| Fig. 2 (layer-wise ΔP_t), §4.1 w2v-BERT L19 | `analyze_transplant2.py --ssl w2vbert`, `analyze_centroid2.py --ssl w2vbert --layer 19` | `intervention_w2vbert.csv`, `centroid2_w2vbert_L19.csv`, `fig2_interv_layers.pdf` |
+| Table 3, §4.1 same-mel decoder swap (D_G, D_ΔP, D_T) and the exploratory cross-mel Griffin–Lim table | `gen/resynth_gl_samemel.py`, `analyze_decoder_swap.py` | `decoder_swap_wavlm_L0.csv`, `decoder_swap_wavlm_tn_L0.csv`, `gl_crossmel_wavlm_L0.csv` |
+| §4.1 related lineages (CosyVoice3 and Chatterbox paths: shift and G toward own target vs sibling system) | `analyze_lineage.py` | `lineage_wavlm_L0.csv` |
+| §4.1 decoder-only control | `analyze_deconly.py` | `deconly_wavlm.csv`, `voc_vs_reference_wavlm.csv` |
 | Table 4 (early/deep bands); the L20--L24 band in `bands_alt.csv` is a released additional analysis not reported in the paper | `analyze_bands.py`, `analyze_spkdisjoint_extras.py` | `bands_spkdisjoint.csv`, `bands_alt.csv` |
-| §4.3 logistic / centroid / kNN deep-band probes | `analyze_deep_probe.py` | `deep_probe.csv` |
-| Table 5, §4.3 paired-kNN mechanism (LOO, leave-utterance/speaker-out, same-utterance fraction, ties) | `analyze_knn_mechanism.py` | `knn_mechanism.csv` |
-| §4.3 Whisper WER and WER=0 subset (both evaluated under the released `speaker_folds.json` split) | `run_asr.py`, `analyze_asr.py` | `asr_wer.csv`, `asr_summary.csv`, `asr_perfect_deepband.csv` |
-| §4.4 cross-condition stress test (per-perturbation detail is released here, the paper reports ranges) | `analyze_robustB3.py` | `robustB3_{wavlm,w2vbert}.csv` |
+| §4.2 logistic / centroid / kNN deep-band probes | `analyze_deep_probe.py` | `deep_probe.csv` |
+| Table 5, §4.2 paired-kNN mechanism (LOO, leave-utterance/speaker-out, same-utterance fraction, ties) | `analyze_knn_mechanism.py` | `knn_mechanism.csv` |
+| §4.2 Whisper WER and WER=0 subset (both evaluated under the released `speaker_folds.json` split) | `run_asr.py`, `analyze_asr.py` | `asr_wer.csv`, `asr_summary.csv`, `asr_perfect_deepband.csv` |
+| §4.3 cross-condition stress test (per-perturbation detail is released here, the paper reports ranges) | `analyze_robustB3.py` | `robustB3_{wavlm,w2vbert}.csv` |
 | every number quoted in the text | `paper_numbers.py` | `PAPER_NUMBERS2.json` |
 
 Protocol in one paragraph: outer speaker-disjoint 5-fold GroupKFold with nested inner

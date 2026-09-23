@@ -181,7 +181,7 @@ this plan and is not covered by it.
   involving Chatterbox in its favour: 61% of tied queries go to Chatterbox, against 27% under A. For WavLM
   TTS-only, 41 of the 122 CosyVoice3 → Chatterbox assignments are ties, and that rate falls from .33 to .26
   under A or B while CosyVoice3 stays the lowest-recall class (recall .61 → .63 under A, .64 under B). The
-  §4.1 sentence now gives the 26% beside the 33%.
+  §4 sentence now gives the 26% beside the 33%.
 
 ## Corrections applied after the first release of these files
 * `asr_wer.csv` had been produced with an earlier QC mask (`exclude7.txt`, 19 IDs) and so held 371 of
