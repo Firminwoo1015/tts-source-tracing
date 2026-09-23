@@ -109,6 +109,7 @@ def fig_intervention():
                [[("resynth_vocos", "Vocos (F5)", "f5tts")],
                 [("resynth_hift3", "HiFT (C3)", "cosyvoice3"), ("resynth_s3vc3", "Token RT (C3)", "cosyvoice3")],
                 [("resynth_hiftcb", "HiFT (Chat.)", "chatterbox"), ("resynth_s3vccb", "Token RT (Chat.)", "chatterbox")],
+                "sep",   # hairline between the matched paths and the off-target controls
                 [("resynth_bigvgan", "BigVGAN (Index)", "indextts"), ("resynth_encodec", "EnCodec", None),
                  ("resynth_dac", "DAC", None)]]),
               ("(b) Griffin–Lim from the same mel",
@@ -118,8 +119,9 @@ def fig_intervention():
     CL2 = dict(CLAB); CL2.update({"cosyvoice3": "C3", "chatterbox": "Chat.", "indextts": "Idx."})   # 24 pt cells
     cmap = LinearSegmentedColormap.from_list("shifts", ["#267CA1", "#FAFBFC", "#D38A7E"]); norm = Normalize(-.7, .7)
     gap, pgap = .38, 1.5                     # between system blocks; between panels (holds the (b) title)
-    total = sum(len(b) for _, bl in panels for b in bl) \
-        + gap * sum(len(bl) - 1 for _, bl in panels) + pgap * (len(panels) - 1)
+    rows = [[b for b in bl if b != "sep"] for _, bl in panels]
+    total = sum(len(b) for bl in rows for b in bl) \
+        + gap * sum(len(bl) - 1 for bl in rows) + pgap * (len(panels) - 1)
     W, H = COL * 72, 207.0
     top = 30                                 # (a) title line + class labels above the grid
     fig = plt.figure(figsize=(COL, H / 72))
@@ -138,6 +140,9 @@ def fig_intervention():
             ax.text(2 / W, (last + .5 + y - .5) / 2, title, transform=ttl, ha="left", va="center",
                     fontsize=9, color=INK, fontweight="bold", clip_on=False)   # centered in the panel gap
         for block in blocks:
+            if block == "sep":
+                ax.plot([-.5, len(classes) - .5], [y - .5 - gap / 2] * 2, color=GRAY, lw=.6, zorder=6)
+                continue
             for p, label, t in block:
                 for jx, cl in enumerate(classes):
                     v = d0.loc[p, f"dP_{cl}"]
@@ -150,14 +155,17 @@ def fig_intervention():
                         ax.text(jx, y + .10, f"{v:.2f}".replace("0.", "."), ha="center", va="center",
                                 color="white" if jx == 0 else "black", fontsize=9, zorder=4)
                 if t:
-                    ax.add_patch(Rectangle((classes.index(t) - .5, y - .5), 1, 1, fill=False, lw=1.1, edgecolor=INK, zorder=5))
+                    ax.add_patch(Rectangle((classes.index(t) - .46, y - .46), .92, .92, fill=False,
+                                           lw=1.35, edgecolor=INK, joinstyle="miter", zorder=5))
                 yt.append(y); yl.append(label); yc.append(PALETTE.get(p, INK)); last = y; y += 1
             y += gap
         y += pgap - gap
     ax.set_yticks(yt, yl)
     for tick, c in zip(ax.get_yticklabels(), yc): tick.set_color(c)
     ax.set_xticks(np.arange(len(classes)), [CL2.get(cl, cl) for cl in classes])
-    ax.xaxis.set_ticks_position("top"); ax.tick_params(axis="x", pad=2)
+    for tick in ax.get_xticklabels(): tick.set_fontweight("bold")
+    ax.xaxis.set_ticks_position("top"); ax.tick_params(axis="x", pad=3)
+    ax.plot([-.5, len(classes) - .5], [-.58] * 2, color=GRAY, lw=.6, clip_on=False, zorder=6)
     import matplotlib.cm as cm
     cax = fig.add_axes([(101 + 18) / W, 25 / H, (W - 103 - 36) / W, 4.5 / H])
     cb = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), cax=cax, orientation="horizontal", ticks=[-.7, 0, .7])
