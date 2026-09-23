@@ -71,7 +71,9 @@ def assert_inside(fig, name):
 
 
 def save(fig, name):
-    fig.savefig(OUT / f"{name}.pdf")
+    # dpi applies to rasterised elements only, such as the colorbar mesh matplotlib rasterises
+    # to avoid seams; 600 dpi keeps them above the 300 dpi that the IEEE PDF guidelines ask for
+    fig.savefig(OUT / f"{name}.pdf", dpi=600)
     fig.savefig(OUT / f"{name}.png")
     plt.close(fig)
     print("saved", name)
